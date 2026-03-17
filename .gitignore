@@ -1,0 +1,9 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Popochiu plugin (downloaded by setup script)
+addons/popochiu/
+
+# Import files
+*.import
