@@ -126,5 +126,5 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 
 
 func _handle_fallback(npc_id: String) -> void:
-	var fallback := "Hmm... I seem to have lost my train of thought. Could you try again?"
+	var fallback := "!ERROR Hmm... I seem to have lost my train of thought. Could you try again?"
 	chat_completed.emit(npc_id, fallback)

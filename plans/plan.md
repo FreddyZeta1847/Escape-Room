@@ -96,31 +96,52 @@ escape-room-ai/
 
 ---
 
-## Phase 3: Puzzle Design
+## Phase 3: Puzzle Design — Attribute Graph System
+
+### Core Mechanic: Attribute-Based Interactions
+
+Instead of hardcoded linear item→lock relationships, the game uses an **attribute graph**:
+
+- **Containers/locks** can have a `required_attribute` (e.g., `"fingerprint"`) — or none at all
+- **Inventory items** can have `attributes` (e.g., Gloves have `["fingerprint"]`) — or none
+- When the player uses an item on a container, the system checks: *does any attribute on this item match the container's `required_attribute`?* If yes → opens
+- **Not all containers require attributes**: the combination lock is purely knowledge-based (enter the right digits). The front door just needs the key item directly.
+- **Not all items have attributes**: the Photo has no special attribute, it's just information
+
+This makes puzzle logic **data-driven and flexible** — you can add new items/containers by editing attributes, not code.
+
+```
+# Attribute graph example:
+Drawer:       required_attribute = "fingerprint"
+Gloves:       attributes = ["fingerprint"]
+→ Gloves can open Drawer (attribute match)
+
+Safe:         required_attribute = null (combination lock — knowledge-based)
+→ Player enters digits directly. No item required.
+
+Front Door:   required_attribute = null (requires specific key item)
+→ Hardcoded: needs "front_door_key" item
+```
 
 ### The Master Puzzle: Open the Safe (4-digit combination)
-The 4 digits come from different sources:
 
-| Digit | Source | Location |
-|-------|--------|----------|
-| 1st: **4** | Wall clock shows 4:15 | Entrance Hall hotspot |
-| 2nd: **7** | Back of photo (shows "7_2") | Living Room inventory item |
-| 3rd: **2** | Back of photo (shows "7_2") | Living Room inventory item |
-| 4th: **8** | NPC dialogue — owner's birth day (8th) | Mrs. Whitmore (Study) |
+The combination is **4728**. Clues are scattered but **none are mandatory** — if the player guesses/stumbles upon the combination, the safe opens regardless:
 
-### Puzzle Chain:
-1. **Explore Entrance Hall** → notice clock (4:15), go to Living Room or Study
-2. **Living Room** → try small drawer → "needs a fingerprint" → no gloves yet
-3. **Talk to Marco** → he speaks in poetic riddles about "fire hiding truths" → player must ask deeper questions to decode this
-4. **Investigate fireplace** → find **hidden compartment** behind loose brick → get **Gloves**
-5. **Use Gloves on drawer** → drawer opens → get **Photo**
-6. **Examine Photo** → flip it → see "7_2" on back
-7. **Notice birthday cake** on table → "Whose birthday was it?" → think to ask Mrs. Whitmore
-8. **Talk to Mrs. Whitmore** (Study) → through natural conversation, ask about the owner's birthday → reveals "the 8th"
-9. **Enter combination 4728 on safe** (Study) → get **Front Door Key**
-10. **Use Key on Front Door** (Entrance Hall) → escape! Victory screen
+| Digit | Clue Source | Location | Required to solve? |
+|-------|------------|----------|--------------------|
+| 1st: **4** | Wall clock shows 4:15 | Entrance Hall | No — just a hint |
+| 2nd: **7** | Back of photo (shows "7_2") | Living Room drawer | No — just a hint |
+| 3rd: **2** | Back of photo (shows "7_2") | Living Room drawer | No — just a hint |
+| 4th: **8** | NPC dialogue — owner's birthday | Mrs. Whitmore (Study) | No — just a hint |
 
-**Key design**: Marco is essential — without his cryptic hints, the player would never think to check behind the fireplace bricks. This makes NPC dialogue a core mechanic, not optional.
+### Intended Flow (not enforced as linear):
+1. **Explore freely** — all 3 rooms are accessible from the start
+2. **Clue gathering** — clock, cake, Marco's hints, Mrs. Whitmore's stories all help
+3. **Find Gloves** (fireplace compartment, guided by Marco's riddles) → use on drawer (attribute: `fingerprint`) → get Photo
+4. **Combine knowledge** → try combination on safe → get Front Door Key
+5. **Use Key on Front Door** → escape!
+
+**Key design**: Marco is essential — without his cryptic hints, the player would never think to check behind the fireplace bricks. This makes NPC dialogue a core mechanic, not optional. But the combination lock rewards exploration *and* luck — items are hints, not gates.
 
 ### Sub-puzzle: Fireplace Hidden Compartment
 - Fireplace has a clickable loose brick (visible only as a subtle hotspot)
@@ -128,10 +149,12 @@ The 4 digits come from different sources:
 - Without Marco's hints, player is unlikely to find it — it blends into the background
 - On repeated click / after Marco's hints: reveals **Gloves** inside
 
-### Sub-puzzle: Fingerprint Drawer
-- Drawer in Living Room has a fingerprint scanner prop
-- Player must have **Gloves** in inventory and use them on the drawer
-- Popochiu interaction: `_on_item_used(item)` checks if item is Gloves
+### Sub-puzzle: Fingerprint Drawer (attribute-based)
+- Drawer in Living Room has a fingerprint scanner
+- `required_attribute = "fingerprint"`
+- Player uses any item with `"fingerprint"` attribute on the drawer → it opens
+- Currently only Gloves have this attribute, but the system supports adding more items later
+- Popochiu interaction: `_on_item_used(item)` checks `item.attributes` against `required_attribute`
 
 ---
 
@@ -192,26 +215,36 @@ IMPORTANT RULES:
 
 ---
 
-## Phase 5: Inventory & Interaction System
+## Phase 5: Inventory & Interaction System (Attribute Graph)
 
-### Inventory Items (Popochiu `I` singleton)
-| Item | Collectible? | Found In | Used On |
-|------|-------------|----------|---------|
-| Gloves | Yes | Fireplace hidden compartment (Living Room) | Small drawer (Living Room) |
-| Photo | Yes | Small drawer (Living Room) | Examine to read back |
-| Front Door Key | Yes | Safe (Study) | Front door (Entrance Hall) |
+### Item Definitions
+| Item | Collectible? | Found In | Attributes |
+|------|-------------|----------|------------|
+| Gloves | Yes | Fireplace hidden compartment (Living Room) | `["fingerprint"]` |
+| Photo | Yes | Small drawer (Living Room) | `[]` (no attributes — pure information) |
+| Front Door Key | Yes | Safe (Study) | `["front_door_key"]` |
+
+### Container / Lock Definitions
+| Container | Required Attribute | Lock Type | Location |
+|-----------|-------------------|-----------|----------|
+| Small Drawer | `"fingerprint"` | Attribute-based | Living Room |
+| Safe | *none* | Combination (knowledge) | Study |
+| Front Door | `"front_door_key"` | Attribute-based | Entrance Hall |
+| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room |
 
 ### Observable Items (Not collected, just information)
 | Item | Info | Location |
 |------|------|----------|
-| Wall Clock | Shows 4:15 (digit: 4) | Entrance Hall |
-| Birthday Cake | "Whose birthday?" → ask Mrs. Whitmore | Living Room (table) |
-| Photo Back | Shows "7_2" (digits: 7, 2) | Inventory (examine action) |
+| Wall Clock | Shows 4:15 (hint for digit 4) | Entrance Hall |
+| Birthday Cake | "Whose birthday?" → conversation prompt | Living Room (table) |
+| Photo Back | Shows "7_2" (hint for digits 7, 2) | Inventory (examine action) |
 
 ### Interaction Logic
 - Each prop has `_on_click()` and `_on_item_used(item)` handlers
-- Container props (drawer, safe) check conditions before opening
-- Safe uses a **custom combination UI** (4 digit spinners)
+- **Attribute-based containers**: `_on_item_used(item)` checks if `item.attributes` contains the container's `required_attribute`. If match → opens. If no match → feedback message ("That doesn't seem to work")
+- **Knowledge-based locks** (Safe): No item needed. Custom combination UI (4 digit spinners). Accepts the correct code regardless of which clues the player has found
+- **Discovery-based** (Fireplace): No attribute or item needed — just find and click the hidden hotspot
+- This system is **extensible**: adding a new puzzle means defining a new attribute on an item and a requirement on a container — no new code paths needed
 
 ---
 
