@@ -36,49 +36,19 @@ escape-room-ai/
 
 ---
 
-## Phase 1: Project Setup & Infrastructure
+## Game Design (Reference)
 
-### 1.1 Setup Script
-- `setup.sh` / `setup.bat`: Downloads Popochiu 2.1.0 release ZIP from GitHub, extracts `addons/popochiu/` into the project
-- `SETUP.md`: Documents prerequisites (Godot 4.6, Ollama with `ollama pull phi3:mini`)
-- `.gitignore`: Exclude `addons/popochiu/`, `.godot/`, `*.import` caches
+This section documents the full game design. All phases reference this — it is not a phase itself.
 
-### 1.2 Popochiu Initialization
-- Enable the Popochiu plugin in `project.godot`
-- Run the setup wizard (GUI templates, input style: point-and-click)
-- Configure top-down 2D camera and resolution (e.g. 320x180 pixel art scaled up)
+### Rooms
 
-### 1.3 LLM Manager Autoload (`llm_manager.gd`)
-- Singleton registered in Project Settings > Autoload
-- Sends POST requests to `http://localhost:11434/api/chat`
-- Non-streaming (`"stream": false`) for simplicity
-- **Persistent conversation history per NPC** for the entire session:
-  - Dictionary `conversations: { "marco": [...], "mrs_whitmore": [...] }`
-  - Each entry is an array of `{ role, content }` messages (system + user + assistant)
-  - Full history sent with each request so the NPC "remembers" the conversation
-  - Sliding window: keep last ~15 messages to avoid exceeding Phi-3's 4K context
-- **Dynamic system prompt injection**: game state (items collected, rooms visited) appended to system prompt so NPCs react to player progress
-- Parameters: `temperature: 0.3`, `num_predict: 150` (keep responses short/fast)
-- Timeout handling + fallback message if Ollama is not running
-
-```gdscript
-# API:
-# LlmManager.chat(npc_id: String, user_message: String) -> String
-# LlmManager.update_game_state(items: Array, rooms_visited: Array) -> void
-# LlmManager.reset_conversation(npc_id: String) -> void
-```
-
----
-
-## Phase 2: Room & Scene Design (3 Rooms)
-
-### 2.1 Entrance Hall (Starting Room)
+**Entrance Hall (Starting Room)**
 - **Props**: Front door (locked — needs final key), coat rack, mirror
 - **Hotspots**: Welcome mat (hint text), wall clock showing "4:15"
 - **Connections**: Door to Living Room, door to Study
 - **Purpose**: Starting point + final exit. Clock shows a number for the combination.
 
-### 2.2 Living Room
+**Living Room**
 - **NPC**: Marco (philosophy student friend, sitting on couch)
 - **Props**: Bookshelf, fireplace with **hidden compartment** (behind a loose brick — only discoverable via Marco's cryptic hints), small drawer (needs fingerprint → opened with **gloves**), couch
 - **Inventory items found here**: Photo (inside drawer, back shows "7_2"), Gloves (inside fireplace hidden compartment)
@@ -87,18 +57,16 @@ escape-room-ai/
 - **Connections**: Back to Entrance Hall
 - **Marco's role**: When asked about the room, he speaks poetically about "warmth hiding secrets" and "fire's embrace concealing truth" — hinting at the fireplace compartment. Player must engage deeply to understand he means: check behind the fireplace bricks.
 
-### 2.3 Study
+**Study**
 - **NPC**: Housekeeper (standing near desk)
 - **Props**: Desk with locked safe (4-digit combination lock), filing cabinet, window (barred)
 - **Inventory items found here**: **Front Door Key** (inside safe)
 - **Hotspots**: Wall writing with partial code hint, framed certificate
 - **Connections**: Back to Entrance Hall
 
----
+### Puzzle Design — Attribute Graph System
 
-## Phase 3: Puzzle Design — Attribute Graph System
-
-### Core Mechanic: Attribute-Based Interactions
+**Core Mechanic: Attribute-Based Interactions**
 
 Instead of hardcoded linear item→lock relationships, the game uses an **attribute graph**:
 
@@ -123,7 +91,7 @@ Front Door:   required_attribute = null (requires specific key item)
 → Hardcoded: needs "front_door_key" item
 ```
 
-### The Master Puzzle: Open the Safe (4-digit combination)
+**The Master Puzzle: Open the Safe (4-digit combination)**
 
 The combination is **4728**. Clues are scattered but **none are mandatory** — if the player guesses/stumbles upon the combination, the safe opens regardless:
 
@@ -134,7 +102,7 @@ The combination is **4728**. Clues are scattered but **none are mandatory** — 
 | 3rd: **2** | Back of photo (shows "7_2") | Living Room drawer | No — just a hint |
 | 4th: **8** | NPC dialogue — owner's birthday | Mrs. Whitmore (Study) | No — just a hint |
 
-### Intended Flow (not enforced as linear):
+**Intended Flow (not enforced as linear):**
 1. **Explore freely** — all 3 rooms are accessible from the start
 2. **Clue gathering** — clock, cake, Marco's hints, Mrs. Whitmore's stories all help
 3. **Find Gloves** (fireplace compartment, guided by Marco's riddles) → use on drawer (attribute: `fingerprint`) → get Photo
@@ -143,24 +111,45 @@ The combination is **4728**. Clues are scattered but **none are mandatory** — 
 
 **Key design**: Marco is essential — without his cryptic hints, the player would never think to check behind the fireplace bricks. This makes NPC dialogue a core mechanic, not optional. But the combination lock rewards exploration *and* luck — items are hints, not gates.
 
-### Sub-puzzle: Fireplace Hidden Compartment
+**Sub-puzzle: Fireplace Hidden Compartment**
 - Fireplace has a clickable loose brick (visible only as a subtle hotspot)
 - On first click: "The bricks seem solid... but one feels slightly different"
 - Without Marco's hints, player is unlikely to find it — it blends into the background
 - On repeated click / after Marco's hints: reveals **Gloves** inside
 
-### Sub-puzzle: Fingerprint Drawer (attribute-based)
+**Sub-puzzle: Fingerprint Drawer (attribute-based)**
 - Drawer in Living Room has a fingerprint scanner
 - `required_attribute = "fingerprint"`
 - Player uses any item with `"fingerprint"` attribute on the drawer → it opens
 - Currently only Gloves have this attribute, but the system supports adding more items later
 - Popochiu interaction: `_on_item_used(item)` checks `item.attributes` against `required_attribute`
 
----
+### Item Definitions
 
-## Phase 4: NPC System (LLM Integration)
+| Item | Collectible? | Found In | Attributes |
+|------|-------------|----------|------------|
+| Gloves | Yes | Fireplace hidden compartment (Living Room) | `["fingerprint"]` |
+| Photo | Yes | Small drawer (Living Room) | `[]` (no attributes — pure information) |
+| Front Door Key | Yes | Safe (Study) | `["front_door_key"]` |
 
-### 4.1 NPC Personas (System Prompts)
+### Container / Lock Definitions
+
+| Container | Required Attribute | Lock Type | Location |
+|-----------|-------------------|-----------|----------|
+| Small Drawer | `"fingerprint"` | Attribute-based | Living Room |
+| Safe | *none* | Combination (knowledge) | Study |
+| Front Door | `"front_door_key"` | Attribute-based | Entrance Hall |
+| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room |
+
+### Observable Items (Not collected, just information)
+
+| Item | Info | Location |
+|------|------|----------|
+| Wall Clock | Shows 4:15 (hint for digit 4) | Entrance Hall |
+| Birthday Cake | "Whose birthday?" → conversation prompt | Living Room (table) |
+| Photo Back | Shows "7_2" (hint for digits 7, 2) | Inventory (examine action) |
+
+### NPC Personas (System Prompts)
 
 **Housekeeper — "Mrs. Whitmore"**
 ```
@@ -194,14 +183,7 @@ IMPORTANT RULES:
 - You love philosophy and may quote thinkers if it fits naturally.
 ```
 
-### 4.2 Dialogue UI
-- Player clicks NPC → Popochiu dialogue opens
-- Show a **text input field** (custom UI overlay on top of Popochiu)
-- Player types free-form message → sent to LLM Manager → response displayed as NPC speech bubble
-- Conversation history maintained per NPC per session
-- "Exit conversation" button to close dialogue
-
-### 4.3 Hint System via NPC
+### Hint System via NPC
 - NPCs give **progressive hints** based on game state (injected into system prompt dynamically)
 - Game state tracked: `items_collected`, `rooms_visited`, `puzzles_solved`
 - Example state injection into system prompt:
@@ -215,76 +197,156 @@ IMPORTANT RULES:
 
 ---
 
-## Phase 5: Inventory & Interaction System (Attribute Graph)
+## Phase 1: Project Setup & Infrastructure ✅
 
-### Item Definitions
-| Item | Collectible? | Found In | Attributes |
-|------|-------------|----------|------------|
-| Gloves | Yes | Fireplace hidden compartment (Living Room) | `["fingerprint"]` |
-| Photo | Yes | Small drawer (Living Room) | `[]` (no attributes — pure information) |
-| Front Door Key | Yes | Safe (Study) | `["front_door_key"]` |
+**Goal**: Repository ready, Popochiu downloaded, LLM manager working.
 
-### Container / Lock Definitions
-| Container | Required Attribute | Lock Type | Location |
-|-----------|-------------------|-----------|----------|
-| Small Drawer | `"fingerprint"` | Attribute-based | Living Room |
-| Safe | *none* | Combination (knowledge) | Study |
-| Front Door | `"front_door_key"` | Attribute-based | Entrance Hall |
-| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room |
+### 1.1 Setup Script
+- [x] `setup.sh` / `setup.bat`: Downloads Popochiu 2.1.0 release ZIP from GitHub, extracts `addons/popochiu/` into the project
+- [x] `SETUP.md`: Documents prerequisites (Godot 4.6, Ollama with `ollama pull phi3:mini`)
+- [x] `.gitignore`: Exclude `addons/popochiu/`, `.godot/`, `*.import` caches
 
-### Observable Items (Not collected, just information)
-| Item | Info | Location |
-|------|------|----------|
-| Wall Clock | Shows 4:15 (hint for digit 4) | Entrance Hall |
-| Birthday Cake | "Whose birthday?" → conversation prompt | Living Room (table) |
-| Photo Back | Shows "7_2" (hint for digits 7, 2) | Inventory (examine action) |
+### 1.2 Popochiu Initialization
+- [ ] Enable the Popochiu plugin in `project.godot` (editor)
+- [ ] Run the setup wizard — Game Type: Retro, GUI: Simple Click (editor)
+- [ ] Configure top-down 2D camera and resolution (320x180 pixel art scaled up)
 
-### Interaction Logic
-- Each prop has `_on_click()` and `_on_item_used(item)` handlers
-- **Attribute-based containers**: `_on_item_used(item)` checks if `item.attributes` contains the container's `required_attribute`. If match → opens. If no match → feedback message ("That doesn't seem to work")
-- **Knowledge-based locks** (Safe): No item needed. Custom combination UI (4 digit spinners). Accepts the correct code regardless of which clues the player has found
-- **Discovery-based** (Fireplace): No attribute or item needed — just find and click the hidden hotspot
-- This system is **extensible**: adding a new puzzle means defining a new attribute on an item and a requirement on a container — no new code paths needed
+### 1.3 LLM Manager Autoload (`llm_manager.gd`)
+- [x] Singleton registered in Project Settings > Autoload
+- [x] Sends POST requests to `http://localhost:11434/api/chat`
+- [x] Non-streaming (`"stream": false`) for simplicity
+- [x] Persistent conversation history per NPC (sliding window ~15 messages)
+- [x] Dynamic system prompt injection (game state appended)
+- [x] Parameters: `temperature: 0.3`, `num_predict: 150`
+- [x] Timeout handling + fallback message if Ollama is not running
+
+```gdscript
+# API:
+# LlmManager.chat(npc_id: String, user_message: String) -> String
+# LlmManager.update_game_state(items: Array, rooms_visited: Array) -> void
+# LlmManager.reset_conversation(npc_id: String) -> void
+```
 
 ---
 
-## Phase 6: Implementation Order
+## Phase 2: Core Systems (Greybox)
 
-### Step 1 — Setup & Skeleton
-- [ ] Create setup scripts (download Popochiu)
-- [ ] Initialize Popochiu, configure project settings
-- [ ] Create Player character with basic walk animation
-- [ ] Create 3 empty rooms with walkable areas and room transitions
+**Goal**: Build all game mechanics with placeholder art. The full game loop should be playable end-to-end with colored rectangles and programmer art.
 
-### Step 2 — LLM Integration
-- [ ] Create `llm_manager.gd` autoload singleton
-- [ ] Implement Ollama HTTP chat with system prompts
-- [ ] Create custom text input UI for NPC dialogue
-- [ ] Test with a single NPC
+### 2.1 Attribute Graph & Interaction System
+- [ ] Base interaction logic: `_on_click()` and `_on_item_used(item)` patterns
+- [ ] Attribute matching system: items have `attributes[]`, containers have `required_attribute`
+- [ ] Three lock types working: attribute-based, combination (knowledge), discovery (hidden hotspot)
+- [ ] Feedback messages for wrong item usage ("That doesn't seem to work")
 
-### Step 3 — Props & Hotspots
-- [ ] Add all props and hotspots to rooms (with placeholder art)
-- [ ] Implement click interactions (examine text, descriptions)
-- [ ] Add wall clock, paintings, inscriptions as hotspots
+### 2.2 Inventory System
+- [ ] Create inventory items (Gloves, Photo, Front Door Key) with Popochiu
+- [ ] Item attributes defined on each item
+- [ ] Item collection (pick up) and usage (use on prop) flow
+- [ ] Photo examine action (flip to see "7_2" on the back)
 
-### Step 4 — Inventory & Puzzles
-- [ ] Create inventory items (Gloves, Photo, Key)
-- [ ] Implement drawer fingerprint puzzle (item-on-prop interaction)
-- [ ] Implement safe combination UI (4-digit input)
-- [ ] Implement front door unlock with key
-- [ ] Wire up the full puzzle chain
+### 2.3 Combination Lock UI
+- [ ] Custom 4-digit spinner UI for the safe
+- [ ] Accepts code 4728 → opens safe → gives Front Door Key
+- [ ] No item required — purely knowledge-based
 
-### Step 5 — NPCs
-- [ ] Create Housekeeper and Guest characters with sprites
-- [ ] Wire up NPC click → dialogue → LLM chat flow
-- [ ] Write and test system prompts for both NPCs
-- [ ] Add game-state-aware hint injection
+### 2.4 Game State Tracker
+- [ ] Track: `items_collected`, `rooms_visited`, `puzzles_solved`
+- [ ] Expose to LLM Manager for dynamic system prompt injection (Phase 4)
 
-### Step 6 — Polish & Art
-- [ ] Find/create pixel art assets for rooms, props, characters
-- [ ] Add sound effects and ambient audio
+---
+
+## Phase 3: Greybox Rooms & Navigation
+
+**Goal**: 3 rooms with placeholder backgrounds, walkable areas, room transitions, all props and hotspots placed. Full puzzle chain playable.
+
+### 3.1 Player Character
+- [ ] Create Player character with Popochiu (placeholder sprite)
+- [ ] Basic walk animation (4-direction or simple)
+
+### 3.2 Room Shells (Placeholder Art)
+- [ ] Entrance Hall — colored rectangle background, walkable area, markers (Start, FromLivingRoom, FromStudy)
+- [ ] Living Room — colored rectangle background, walkable area, markers (FromEntranceHall)
+- [ ] Study — colored rectangle background, walkable area, markers (FromEntranceHall)
+- [ ] Room transition scripts (door hotspots → `R.goto_room()`)
+
+### 3.3 Props & Hotspots (All Rooms)
+- [ ] **Entrance Hall**: Front door (locked), wall clock (examine: "4:15"), coat rack, mirror, welcome mat
+- [ ] **Living Room**: Fireplace + hidden compartment (loose brick hotspot), small drawer (fingerprint lock), bookshelf, couch, birthday cake, mantle inscription, painting
+- [ ] **Study**: Safe (combination lock), desk, filing cabinet, barred window, wall writing, framed certificate
+- [ ] All props have `_on_click()` examine text
+- [ ] All interactive props have `_on_item_used(item)` wired to attribute system
+
+### 3.4 Wire Full Puzzle Chain
+- [ ] Fireplace loose brick → click → discover Gloves
+- [ ] Gloves on drawer → attribute match → get Photo
+- [ ] Safe → enter 4728 → get Front Door Key
+- [ ] Key on front door → victory / escape
+- [ ] **Test**: Full game playable from start to finish with placeholders
+
+---
+
+## Phase 4: NPC System & Dialogue
+
+**Goal**: Both NPCs placed in rooms, LLM dialogue working, game-state-aware hints.
+
+### 4.1 NPC Characters
+- [ ] Create Mrs. Whitmore character (placeholder sprite) in Study
+- [ ] Create Marco character (placeholder sprite) in Living Room
+
+### 4.2 Dialogue UI
+- [ ] Custom text input field (UI overlay on top of Popochiu)
+- [ ] Player clicks NPC → dialogue opens → player types → LLM responds as speech bubble
+- [ ] "Exit conversation" button
+- [ ] Loading indicator while waiting for LLM response
+
+### 4.3 LLM Wiring
+- [ ] NPC click → `LlmManager.chat(npc_id, message)` → display response
+- [ ] System prompts loaded per NPC (Mrs. Whitmore, Marco)
+- [ ] Game state injected into system prompts dynamically
+- [ ] Conversation history persists per NPC per session
+
+### 4.4 Test NPC Interactions
+- [ ] Marco gives progressive poetic hints about the fireplace
+- [ ] Mrs. Whitmore mentions the owner's birthday naturally
+- [ ] Hints adapt based on game state (items found, puzzles solved)
+- [ ] Offline fallback: graceful error if Ollama is not running
+
+---
+
+## Phase 5: Art Pass
+
+**Goal**: Replace all placeholder art with real pixel art. The game looks finished.
+
+### 5.1 Assets
+- [ ] Download/create pixel art tileset (e.g., LimeZu "Modern Interiors" from itch.io)
+- [ ] Character sprites: Player (4-direction walk), Mrs. Whitmore (idle), Marco (idle)
+- [ ] Room backgrounds: Entrance Hall, Living Room, Study
+- [ ] Props: all furniture, fireplace, safe, drawer, clock, cake, etc.
+- [ ] Inventory item icons: Gloves, Photo, Front Door Key
+
+### 5.2 Apply to Rooms
+- [ ] Replace placeholder backgrounds with tiled rooms
+- [ ] Replace placeholder prop sprites
+- [ ] Adjust walkable areas to match new art
+- [ ] Adjust hotspot regions to match new prop positions
+
+### 5.3 Apply to Characters
+- [ ] Player walk animation with real sprites
+- [ ] NPC idle animations
+
+---
+
+## Phase 6: Polish
+
+**Goal**: The game feels complete and handles edge cases.
+
 - [ ] Victory screen when player escapes
-- [ ] Error handling (Ollama not running, timeout)
+- [ ] Sound effects (door open, item pickup, safe click, drawer open)
+- [ ] Ambient audio per room
+- [ ] Transition effects between rooms (fade)
+- [ ] Error handling (Ollama not running, timeout, unexpected states)
+- [ ] Playtesting and puzzle balance tuning
 
 ---
 
