@@ -26,8 +26,10 @@ var _is_open := false
 
 func _ready() -> void:
 	_build_ui()
+	# BUG FIX: Previously only _panel was hidden, but _bg (full-screen ColorRect with
+	# mouse_filter=STOP on CanvasLayer 100) stayed visible — blocking ALL mouse input
+	# and darkening the screen with a 60% black overlay.
 	_bg.visible = false
-	# Block game input while UI is showing
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 

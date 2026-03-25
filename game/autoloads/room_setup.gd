@@ -43,11 +43,11 @@ func _setup_room(room: PopochiuRoom) -> void:
 
 
 func _fix_y_sort(room: PopochiuRoom) -> void:
-	# Popochiu enables y_sort on the room at runtime. The Background sprite
-	# (centered at the room midpoint, e.g. y=90) renders ON TOP of any
-	# prop/hotspot with a lower y position. Fix: push Background behind
-	# everything via z_index, and enable y_sort on Hotspots so each hotspot
-	# sorts at its own y instead of grouping at y=0.
+	# BUG FIX: Popochiu enables y_sort on rooms at runtime. Background sprite
+	# (at room center, e.g. y=90) renders ON TOP of props/hotspots with y < 90,
+	# making upper-half items invisible. Fix: z_index=-1 forces Background behind
+	# everything. Hotspots also need y_sort so they sort individually instead of
+	# grouping at y=0 (which put them all behind Background).
 	var bg := room.get_node_or_null("Background")
 	if bg:
 		bg.z_index = -1
