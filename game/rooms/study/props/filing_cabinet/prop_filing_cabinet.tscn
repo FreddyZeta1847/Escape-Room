@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://4blr01jixai8"]
+
+[ext_resource type="Script" path="res://game/rooms/study/props/filing_cabinet/prop_filing_cabinet.gd" id="1_cdyle"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/props/filing_cabinet/placeholder.png" id="tex_placeholder"]
+
+[node name="FilingCabinet" type="Area2D" unique_id=1026914309]
+input_pickable = true
+script = ExtResource("1_cdyle")
+script_name = "FilingCabinet"
+description = "Filing Cabinet"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=623007335]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2133635894]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=49892547]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=91739141]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://bmotsy1bg5gf2"]
+
+[node name="FromEntranceHall" type="Marker2D" unique_id=579278654]
+visible = false

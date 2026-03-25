@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://c3b7ahaabmme1"]
+
+[ext_resource type="Script" uid="uid://cu7f28blblli2" path="res://game/characters/player/character_player.gd" id="1_jil5h"]
+[ext_resource type="Texture2D" uid="uid://rke3daa4wnex" path="res://game/characters/player/player.png" id="2_xayg2"]
+
+[node name="CharacterPlayer" type="Area2D" unique_id=1242308711]
+position = Vector2(155, 84)
+script = ExtResource("1_jil5h")
+dialog_pos = Vector2(3.6985474, 5.8899536)
+script_name = "Player"
+description = "Player"
+cursor = 8
+interaction_polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="ScalingPolygon" type="CollisionPolygon2D" parent="." unique_id=859752325]
+polygon = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1671882972]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=380097059]
+texture_filter = 1
+position = Vector2(4, 3)
+texture = ExtResource("2_xayg2")
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=2024437891]
+visible = false
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=1090708686]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

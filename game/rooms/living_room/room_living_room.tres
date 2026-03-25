@@ -1,0 +1,9 @@
+[gd_resource type="Resource" format=3 uid="uid://dtdfpqa5n28pf"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/room_living_room_state.gd" id="1_waipl"]
+
+[resource]
+resource_name = "LivingRoom"
+script = ExtResource("1_waipl")
+script_name = "LivingRoom"
+scene = "res://game/rooms/living_room/room_living_room.tscn"

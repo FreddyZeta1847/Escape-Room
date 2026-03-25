@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cci8jr51gypyj"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/props/coat_rack/prop_coat_rack.gd" id="1_hpimo"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/props/coat_rack/placeholder.png" id="tex_placeholder"]
+
+[node name="CoatRack" type="Area2D" unique_id=371332406]
+input_pickable = true
+script = ExtResource("1_hpimo")
+script_name = "CoatRack"
+description = "Coat Rack"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=470246028]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=4836003]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1209597290]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=1108748051]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

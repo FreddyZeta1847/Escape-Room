@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bjehhwd87cc3p"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/hotspots/welcome_mat/hotspot_welcome_mat.gd" id="1_olin1"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/hotspots/welcome_mat/placeholder.png" id="tex_placeholder"]
+
+[node name="WelcomeMat" type="Area2D" unique_id=760541286]
+script = ExtResource("1_olin1")
+script_name = "WelcomeMat"
+description = "Welcome Mat"
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=914869132]
+visible = false
+modulate = Color(1, 0, 1, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+

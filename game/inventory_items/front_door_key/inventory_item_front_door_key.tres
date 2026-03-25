@@ -1,0 +1,9 @@
+[gd_resource type="Resource" format=3 uid="uid://chlxeikfdf2wc"]
+
+[ext_resource type="Script" path="res://game/inventory_items/front_door_key/inventory_item_front_door_key_state.gd" id="1_sou3y"]
+
+[resource]
+resource_name = "FrontDoorKey"
+script = ExtResource("1_sou3y")
+script_name = "FrontDoorKey"
+scene = "res://game/inventory_items/front_door_key/inventory_item_front_door_key.tscn"

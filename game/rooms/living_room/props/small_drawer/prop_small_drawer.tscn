@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bv7msolkuofpr"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/props/small_drawer/prop_small_drawer.gd" id="1_t4hvx"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/props/small_drawer/placeholder.png" id="tex_placeholder"]
+
+[node name="SmallDrawer" type="Area2D" unique_id=1864179246]
+input_pickable = true
+script = ExtResource("1_t4hvx")
+script_name = "SmallDrawer"
+description = "Small Drawer"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1751300060]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1852422998]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1235143481]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=99203357]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

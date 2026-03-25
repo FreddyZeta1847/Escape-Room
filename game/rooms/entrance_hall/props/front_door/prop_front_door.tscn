@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bv8rmotdkr75n"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/props/front_door/prop_front_door.gd" id="1_ex72k"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/props/front_door/placeholder.png" id="tex_placeholder"]
+
+[node name="FrontDoor" type="Area2D" unique_id=1204462669]
+input_pickable = true
+script = ExtResource("1_ex72k")
+script_name = "FrontDoor"
+description = "Front Door"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1954171339]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1970101455]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=310803637]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=685511493]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

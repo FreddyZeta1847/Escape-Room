@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bxri0onmi8bnv"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/props/couch/prop_couch.gd" id="1_p77mf"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/props/couch/placeholder.png" id="tex_placeholder"]
+
+[node name="Couch" type="Area2D" unique_id=368326492]
+input_pickable = true
+script = ExtResource("1_p77mf")
+script_name = "Couch"
+description = "Couch"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=679465450]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=99161696]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=323466802]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=38527654]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

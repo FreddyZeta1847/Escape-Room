@@ -44,12 +44,15 @@ Create a reusable interaction system that all props will use:
 # Core logic:
 # - Items have attributes: Array[String]
 # - Containers have required_attribute: String (or empty)
+# - Containers have contained_items: Array[String] (items given on open)
 # - When player uses item on container:
 #     if container.required_attribute in item.attributes → success
+#       → give player all items in container.contained_items
 #     else → failure feedback
 
 func try_use_item_on_container(item: PopochiuInventoryItem, container: PopochiuProp) -> bool:
     # Check attribute match
+    # If success: iterate contained_items, add each to inventory
     # Return true if opened, false if not
 ```
 
@@ -70,14 +73,14 @@ Each Popochiu inventory item gets an `attributes` array. Define in the item scri
 
 ### A.3: Container Attribute Definitions
 
-Each interactive prop gets a `required_attribute` and lock type. Define in the prop script:
+Each interactive prop gets a `required_attribute`, `lock_type`, and `contained_items`. The `contained_items` array lists item script_names that are given to the player when the container is opened — this keeps the open logic generic instead of hardcoding per-container.
 
-| Container | `required_attribute` | `lock_type` |
-|-----------|---------------------|-------------|
-| Small Drawer | `"fingerprint"` | `"attribute"` |
-| Front Door | `"front_door_key"` | `"attribute"` |
-| Safe | `""` | `"combination"` |
-| Fireplace Compartment | `""` | `"discovery"` |
+| Container | `required_attribute` | `lock_type` | `contained_items` |
+|-----------|---------------------|-------------|-------------------|
+| Small Drawer | `"fingerprint"` | `"attribute"` | `["Photo"]` |
+| Front Door | `"front_door_key"` | `"attribute"` | `[]` (triggers victory) |
+| Safe | `""` | `"combination"` | `["FrontDoorKey"]` |
+| Fireplace Compartment | `""` | `"discovery"` | `["Gloves"]` |
 
 ### A.4: Feedback Messages
 
@@ -194,15 +197,15 @@ func get_state_summary() -> String:
 
 ## Verification Checklist
 
-- [ ] Interaction system correctly matches item attributes to container requirements
-- [ ] Wrong item gives feedback message, correct item opens container
-- [ ] Inventory items have correct attributes defined
-- [ ] Photo examine action shows "7_2" clue
-- [ ] Combination lock UI appears, accepts input, validates 4728
-- [ ] Wrong combination gives feedback, correct combination triggers success
-- [ ] Game state tracks items collected, rooms visited, puzzles solved
-- [ ] Game state summary string is well-formatted for LLM injection
-- [ ] LLM manager receives updated game state for system prompt injection
+- [x] Interaction system correctly matches item attributes to container requirements
+- [x] Wrong item gives feedback message, correct item opens container
+- [x] Inventory items have correct attributes defined
+- [x] Photo examine action shows "7_2" clue
+- [x] Combination lock UI appears, accepts input, validates 4728
+- [x] Wrong combination gives feedback, correct combination triggers success
+- [x] Game state tracks items collected, rooms visited, puzzles solved
+- [x] Game state summary string is well-formatted for LLM injection
+- [x] LLM manager receives updated game state for system prompt injection
 
 ---
 

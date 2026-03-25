@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cxx60psn4h34w"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.gd" id="1_2fksn"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/hotspots/door_to_entrance_hall/placeholder.png" id="tex_placeholder"]
+
+[node name="DoorToEntranceHall" type="Area2D" unique_id=285664591]
+script = ExtResource("1_2fksn")
+script_name = "DoorToEntranceHall"
+description = "Door To Entrance Hall"
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1334234324]
+visible = false
+modulate = Color(1, 0, 1, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+

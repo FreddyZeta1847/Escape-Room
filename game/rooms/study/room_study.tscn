@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://3bqij5w35uwr"]
+
+[ext_resource type="Script" uid="uid://c5pdqc73sdiu0" path="res://game/rooms/study/room_study.gd" id="1_3aegv"]
+[ext_resource type="PackedScene" uid="uid://dr5m8py1wxnwd" path="res://game/rooms/study/props/safe/prop_safe.tscn" id="2_64qat"]
+[ext_resource type="PackedScene" uid="uid://d0v5v1fiij8jj" path="res://game/rooms/study/walkable_areas/main/walkable_area_main.tscn" id="2_q1lmu"]
+[ext_resource type="PackedScene" uid="uid://ccqucxtoesmjq" path="res://game/rooms/study/props/desk/prop_desk.tscn" id="3_qnoa5"]
+[ext_resource type="PackedScene" uid="uid://4blr01jixai8" path="res://game/rooms/study/props/filing_cabinet/prop_filing_cabinet.tscn" id="4_q4hth"]
+[ext_resource type="PackedScene" uid="uid://dky4d1ocr7s03" path="res://game/rooms/study/props/barred_window/prop_barred_window.tscn" id="5_3lmee"]
+[ext_resource type="PackedScene" uid="uid://bdt6w66uhx8sv" path="res://game/rooms/study/props/framed_certificate/prop_framed_certificate.tscn" id="6_p686u"]
+[ext_resource type="PackedScene" uid="uid://b3keninuyn4p4" path="res://game/rooms/study/hotspots/wall_writing/hotspot_wall_writing.tscn" id="7_m6q4x"]
+[ext_resource type="PackedScene" uid="uid://bpwfjq48mn2pl" path="res://game/rooms/study/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.tscn" id="8_47ilj"]
+[ext_resource type="PackedScene" uid="uid://hafowg4rjtbr" path="res://game/rooms/study/markers/from_entrance_hall/marker_from_entrance_hall.tscn" id="10_h27hv"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/bg_study.png" id="tex_bg"]
+
+[node name="RoomStudy" type="Node2D" unique_id=1086019223]
+script = ExtResource("1_3aegv")
+script_name = "Study"
+width = 320
+height = 180
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(160, 90)
+texture = ExtResource("tex_bg")
+
+[node name="WalkableAreas" type="Node2D" parent="." unique_id=2084361385]
+
+[node name="Main" parent="WalkableAreas" unique_id=1555660396 instance=ExtResource("2_q1lmu")]
+position = Vector2(160, 90)
+interaction_polygon = Array[PackedVector2Array]([PackedVector2Array(-152, -82, 152, -82, 152, 86, -152, 86)])
+
+[node name="Props" type="Node2D" parent="." unique_id=1854217019]
+
+[node name="Safe" parent="Props" unique_id=1293346080 instance=ExtResource("2_64qat")]
+position = Vector2(250, 70)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Desk" parent="Props" unique_id=1528492580 instance=ExtResource("3_qnoa5")]
+position = Vector2(160, 90)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="FilingCabinet" parent="Props" unique_id=1026914309 instance=ExtResource("4_q4hth")]
+position = Vector2(40, 70)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="BarredWindow" parent="Props" unique_id=668304473 instance=ExtResource("5_3lmee")]
+position = Vector2(160, 30)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="FramedCertificate" parent="Props" unique_id=2047585082 instance=ExtResource("6_p686u")]
+position = Vector2(80, 30)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Hotspots" type="Node2D" parent="." unique_id=718804232]
+
+[node name="WallWriting" parent="Hotspots" unique_id=1269959136 instance=ExtResource("7_m6q4x")]
+position = Vector2(220, 30)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="DoorToEntranceHall" parent="Hotspots" unique_id=2031041795 instance=ExtResource("8_47ilj")]
+position = Vector2(300, 90)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Regions" type="Node2D" parent="." unique_id=1671975815]
+
+[node name="Markers" type="Node2D" parent="." unique_id=1401137855]
+
+[node name="FromEntranceHall" parent="Markers" unique_id=1355951081 instance=ExtResource("10_h27hv")]
+position = Vector2(270, 140)
+
+[node name="Characters" type="Node2D" parent="." unique_id=1917195330]

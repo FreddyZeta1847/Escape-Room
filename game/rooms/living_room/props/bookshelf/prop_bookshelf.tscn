@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://s72g2t71ha4y"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/props/bookshelf/prop_bookshelf.gd" id="1_duq7c"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/props/bookshelf/placeholder.png" id="tex_placeholder"]
+
+[node name="Bookshelf" type="Area2D" unique_id=2019641792]
+input_pickable = true
+script = ExtResource("1_duq7c")
+script_name = "Bookshelf"
+description = "Bookshelf"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=545460335]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1512489579]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=482756455]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=441502014]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

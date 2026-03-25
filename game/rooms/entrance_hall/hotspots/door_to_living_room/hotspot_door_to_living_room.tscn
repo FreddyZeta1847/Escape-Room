@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://wqfvspmcdmnb"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/hotspots/door_to_living_room/hotspot_door_to_living_room.gd" id="1_lsull"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/hotspots/door_to_living_room/placeholder.png" id="tex_placeholder"]
+
+[node name="DoorToLivingRoom" type="Area2D" unique_id=597845831]
+script = ExtResource("1_lsull")
+script_name = "DoorToLivingRoom"
+description = "Door To Living Room"
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1813954163]
+visible = false
+modulate = Color(1, 0, 1, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+

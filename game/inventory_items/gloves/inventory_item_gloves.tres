@@ -1,0 +1,9 @@
+[gd_resource type="Resource" format=3 uid="uid://cuunivct08uvp"]
+
+[ext_resource type="Script" path="res://game/inventory_items/gloves/inventory_item_gloves_state.gd" id="1_17weo"]
+
+[resource]
+resource_name = "Gloves"
+script = ExtResource("1_17weo")
+script_name = "Gloves"
+scene = "res://game/inventory_items/gloves/inventory_item_gloves.tscn"

@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bq0v38tiyp75m"]
+
+[ext_resource type="Script" uid="uid://derbvqe2q44ex" path="res://game/rooms/entrance_hall/props/wall_clock/prop_wall_clock.gd" id="1_637nl"]
+[ext_resource type="Texture2D" uid="uid://b6vko47pe0ywt" path="res://game/rooms/entrance_hall/props/wall_clock/placeholder.png" id="tex_placeholder"]
+
+[node name="WallClock" type="Area2D" unique_id=311835741]
+script = ExtResource("1_637nl")
+script_name = "WallClock"
+description = "Wall Clock"
+cursor = 1
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1532887045]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2015090438]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=346794146]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=2021760174]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

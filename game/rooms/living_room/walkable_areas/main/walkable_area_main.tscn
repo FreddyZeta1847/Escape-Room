@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://b1ondnyildeio"]
+
+[ext_resource type="Script" uid="uid://l0lwdnxsiek2" path="res://game/rooms/living_room/walkable_areas/main/walkable_area_main.gd" id="1_4qyo0"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_4qyo0"]
+vertices = PackedVector2Array(150, 80, -150, 80, -150, -80, 150, -80)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(0, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-150, -80, -150, 80, 150, 80, 150, -80)])
+agent_radius = 0.0
+
+[node name="Main" type="Node2D" unique_id=1185759098]
+position = Vector2(160, 90)
+script = ExtResource("1_4qyo0")
+script_name = "Main"
+description = "Main"
+interaction_polygon = Array[PackedVector2Array]([PackedVector2Array(-150, -80, -150, 80, 150, 80, 150, -80)])
+
+[node name="Perimeter" type="NavigationRegion2D" parent="." unique_id=1461170296]
+visible = false
+modulate = Color(0, 1, 0, 1)
+navigation_polygon = SubResource("NavigationPolygon_4qyo0")

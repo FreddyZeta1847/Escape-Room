@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bdt6w66uhx8sv"]
+
+[ext_resource type="Script" path="res://game/rooms/study/props/framed_certificate/prop_framed_certificate.gd" id="1_htqsj"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/props/framed_certificate/placeholder.png" id="tex_placeholder"]
+
+[node name="FramedCertificate" type="Area2D" unique_id=2047585082]
+input_pickable = true
+script = ExtResource("1_htqsj")
+script_name = "FramedCertificate"
+description = "Framed Certificate"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1275999541]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=864863682]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=368619962]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=2095137182]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

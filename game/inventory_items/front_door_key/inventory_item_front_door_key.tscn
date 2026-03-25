@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://csa2ac45u8fit"]
+
+[ext_resource type="Script" path="res://game/inventory_items/front_door_key/inventory_item_front_door_key.gd" id="1_wn8tl"]
+
+[node name="ItemFrontDoorKey" type="TextureRect" unique_id=2093835625]
+texture_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 0
+stretch_mode = 5
+script = ExtResource("1_wn8tl")
+script_name = "FrontDoorKey"
+description = "Front Door Key"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=138808497]

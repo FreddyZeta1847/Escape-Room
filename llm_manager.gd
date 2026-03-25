@@ -12,7 +12,6 @@ const MAX_HISTORY := 15
 const REQUEST_TIMEOUT := 120.0
 
 var conversations: Dictionary = {}
-var game_state: Dictionary = {"items": [], "rooms_visited": []}
 
 var _http_request: HTTPRequest
 var _pending_npc_id: String = ""
@@ -63,11 +62,6 @@ func chat(npc_id: String, user_message: String) -> void:
 		_handle_fallback(npc_id)
 
 
-func update_game_state(items: Array, rooms_visited: Array) -> void:
-	game_state["items"] = items
-	game_state["rooms_visited"] = rooms_visited
-
-
 func reset_conversation(npc_id: String) -> void:
 	conversations.erase(npc_id)
 
@@ -77,14 +71,10 @@ func _build_system_prompt(npc_id: String) -> String:
 	prompt += "Stay in character. Give short, helpful responses (1-3 sentences). "
 	prompt += "You may give hints but never reveal solutions directly.\n\n"
 
-	var items: Array = game_state.get("items", [])
-	var rooms: Array = game_state.get("rooms_visited", [])
-	if items.size() > 0 or rooms.size() > 0:
-		prompt += "Current game state:\n"
-		if items.size() > 0:
-			prompt += "- Player inventory: %s\n" % ", ".join(items)
-		if rooms.size() > 0:
-			prompt += "- Rooms visited: %s\n" % ", ".join(rooms)
+	# Pull game state from GameState singleton automatically
+	var state_summary: String = GameState.get_state_summary()
+	if not state_summary.is_empty():
+		prompt += state_summary + "\n"
 
 	return prompt
 

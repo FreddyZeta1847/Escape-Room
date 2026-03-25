@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dr5m8py1wxnwd"]
+
+[ext_resource type="Script" path="res://game/rooms/study/props/safe/prop_safe.gd" id="1_hennh"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/props/safe/placeholder.png" id="tex_placeholder"]
+
+[node name="Safe" type="Area2D" unique_id=1293346080]
+input_pickable = true
+script = ExtResource("1_hennh")
+script_name = "Safe"
+description = "Safe"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1884297343]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=412177045]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=363447578]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=1214044850]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

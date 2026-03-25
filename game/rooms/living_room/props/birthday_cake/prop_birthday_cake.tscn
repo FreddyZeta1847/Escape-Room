@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ubu588taa74d"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/props/birthday_cake/prop_birthday_cake.gd" id="1_1o24n"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/props/birthday_cake/placeholder.png" id="tex_placeholder"]
+
+[node name="BirthdayCake" type="Area2D" unique_id=439061941]
+input_pickable = true
+script = ExtResource("1_1o24n")
+script_name = "BirthdayCake"
+description = "Birthday Cake"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=685384525]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1965231634]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=348718723]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=690064487]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

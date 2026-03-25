@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ccqucxtoesmjq"]
+
+[ext_resource type="Script" path="res://game/rooms/study/props/desk/prop_desk.gd" id="1_craj2"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/props/desk/placeholder.png" id="tex_placeholder"]
+
+[node name="Desk" type="Area2D" unique_id=1528492580]
+input_pickable = true
+script = ExtResource("1_craj2")
+script_name = "Desk"
+description = "Desk"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1579150264]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1801853476]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=633444328]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=374318825]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

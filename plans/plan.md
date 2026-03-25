@@ -134,12 +134,14 @@ The combination is **4728**. Clues are scattered but **none are mandatory** — 
 
 ### Container / Lock Definitions
 
-| Container | Required Attribute | Lock Type | Location |
-|-----------|-------------------|-----------|----------|
-| Small Drawer | `"fingerprint"` | Attribute-based | Living Room |
-| Safe | *none* | Combination (knowledge) | Study |
-| Front Door | `"front_door_key"` | Attribute-based | Entrance Hall |
-| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room |
+Each container defines a `contained_items: Array[String]` — the items given to the player when opened. This keeps puzzle logic data-driven: the open logic reads from `contained_items` generically instead of hardcoding per-container.
+
+| Container | Required Attribute | Lock Type | Location | `contained_items` |
+|-----------|-------------------|-----------|----------|--------------------|
+| Small Drawer | `"fingerprint"` | Attribute-based | Living Room | `["Photo"]` |
+| Safe | *none* | Combination (knowledge) | Study | `["FrontDoorKey"]` |
+| Front Door | `"front_door_key"` | Attribute-based | Entrance Hall | `[]` (triggers victory) |
+| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room | `["Gloves"]` |
 
 ### Observable Items (Not collected, just information)
 
@@ -234,55 +236,61 @@ IMPORTANT RULES:
 **Goal**: Build all game mechanics with placeholder art. The full game loop should be playable end-to-end with colored rectangles and programmer art.
 
 ### 2.1 Attribute Graph & Interaction System
-- [ ] Base interaction logic: `_on_click()` and `_on_item_used(item)` patterns
-- [ ] Attribute matching system: items have `attributes[]`, containers have `required_attribute`
-- [ ] Three lock types working: attribute-based, combination (knowledge), discovery (hidden hotspot)
-- [ ] Feedback messages for wrong item usage ("That doesn't seem to work")
+- [x] Base interaction logic: `_on_click()` and `_on_item_used(item)` patterns
+- [x] Attribute matching system: items have `attributes[]`, containers have `required_attribute`
+- [x] Containers define `contained_items: Array[String]` — items given to player on open
+- [x] Three lock types working: attribute-based, combination (knowledge), discovery (hidden hotspot)
+- [x] Feedback messages for wrong item usage ("That doesn't seem to work")
 
 ### 2.2 Inventory System
-- [ ] Create inventory items (Gloves, Photo, Front Door Key) with Popochiu
-- [ ] Item attributes defined on each item
-- [ ] Item collection (pick up) and usage (use on prop) flow
-- [ ] Photo examine action (flip to see "7_2" on the back)
+- [x] Create inventory items (Gloves, Photo, Front Door Key) with Popochiu
+- [x] Item attributes defined on each item
+- [x] Item collection (pick up) and usage (use on prop) flow
+- [x] Photo examine action (flip to see "7_2" on the back)
 
 ### 2.3 Combination Lock UI
-- [ ] Custom 4-digit spinner UI for the safe
-- [ ] Accepts code 4728 → opens safe → gives Front Door Key
-- [ ] No item required — purely knowledge-based
+- [x] Custom 4-digit spinner UI for the safe
+- [x] Accepts code 4728 → opens safe → gives Front Door Key
+- [x] No item required — purely knowledge-based
 
 ### 2.4 Game State Tracker
-- [ ] Track: `items_collected`, `rooms_visited`, `puzzles_solved`
-- [ ] Expose to LLM Manager for dynamic system prompt injection (Phase 4)
+- [x] Track: `items_collected`, `rooms_visited`, `puzzles_solved`
+- [x] Expose to LLM Manager for dynamic system prompt injection (Phase 4)
 
 ---
 
-## Phase 3: Greybox Rooms & Navigation
+## Phase 3: Greybox Rooms & Navigation ✅
 
 **Goal**: 3 rooms with placeholder backgrounds, walkable areas, room transitions, all props and hotspots placed. Full puzzle chain playable.
 
 ### 3.1 Player Character
-- [ ] Create Player character with Popochiu (placeholder sprite)
-- [ ] Basic walk animation (4-direction or simple)
+- [x] Create Player character with Popochiu (placeholder sprite)
+- [x] Basic walk animation (4-direction or simple)
 
 ### 3.2 Room Shells (Placeholder Art)
-- [ ] Entrance Hall — colored rectangle background, walkable area, markers (Start, FromLivingRoom, FromStudy)
-- [ ] Living Room — colored rectangle background, walkable area, markers (FromEntranceHall)
-- [ ] Study — colored rectangle background, walkable area, markers (FromEntranceHall)
-- [ ] Room transition scripts (door hotspots → `R.goto_room()`)
+- [x] Entrance Hall — colored rectangle background, walkable area, markers (Start, FromLivingRoom, FromStudy)
+- [x] Living Room — colored rectangle background, walkable area, markers (FromEntranceHall)
+- [x] Study — colored rectangle background, walkable area, markers (FromEntranceHall)
+- [x] Room transition scripts (door hotspots → `R.goto_room()`)
 
 ### 3.3 Props & Hotspots (All Rooms)
-- [ ] **Entrance Hall**: Front door (locked), wall clock (examine: "4:15"), coat rack, mirror, welcome mat
-- [ ] **Living Room**: Fireplace + hidden compartment (loose brick hotspot), small drawer (fingerprint lock), bookshelf, couch, birthday cake, mantle inscription, painting
-- [ ] **Study**: Safe (combination lock), desk, filing cabinet, barred window, wall writing, framed certificate
-- [ ] All props have `_on_click()` examine text
-- [ ] All interactive props have `_on_item_used(item)` wired to attribute system
+- [x] **Entrance Hall**: Front door (locked), wall clock (examine: "4:15"), coat rack, mirror, welcome mat
+- [x] **Living Room**: Fireplace + hidden compartment (loose brick hotspot), small drawer (fingerprint lock), bookshelf, couch, birthday cake, mantle inscription, painting
+- [x] **Study**: Safe (combination lock), desk, filing cabinet, barred window, wall writing, framed certificate
+- [x] All props have `_on_click()` examine text
+- [x] All interactive props have `_on_item_used(item)` wired to attribute system
 
 ### 3.4 Wire Full Puzzle Chain
-- [ ] Fireplace loose brick → click → discover Gloves
-- [ ] Gloves on drawer → attribute match → get Photo
-- [ ] Safe → enter 4728 → get Front Door Key
-- [ ] Key on front door → victory / escape
-- [ ] **Test**: Full game playable from start to finish with placeholders
+- [x] Fireplace loose brick → click → discover Gloves
+- [x] Gloves on drawer → attribute match → get Photo
+- [x] Safe → enter 4728 → get Front Door Key
+- [x] Key on front door → victory / escape
+- [x] **Test**: Full game playable from start to finish with placeholders
+
+### 3.5 Runtime Fixes (room_setup.gd)
+- [x] Y-sort fix: Background `z_index = -1` + Hotspots `y_sort_enabled = true` (all rooms)
+- [x] Camera limits locked to viewport size (all rooms)
+- [x] CombinationLock overlay hidden when lock is closed (was blocking all input)
 
 ---
 

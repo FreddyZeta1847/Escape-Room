@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dm8henw78f88c"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/props/mirror/prop_mirror.gd" id="1_44m3d"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/props/mirror/placeholder.png" id="tex_placeholder"]
+
+[node name="Mirror" type="Area2D" unique_id=580580309]
+input_pickable = true
+script = ExtResource("1_44m3d")
+script_name = "Mirror"
+description = "Mirror"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1561738711]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1060845762]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1085036917]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=734512762]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

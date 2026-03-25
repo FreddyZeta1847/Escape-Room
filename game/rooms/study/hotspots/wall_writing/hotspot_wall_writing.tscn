@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://b3keninuyn4p4"]
+
+[ext_resource type="Script" path="res://game/rooms/study/hotspots/wall_writing/hotspot_wall_writing.gd" id="1_xoid4"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/hotspots/wall_writing/placeholder.png" id="tex_placeholder"]
+
+[node name="WallWriting" type="Area2D" unique_id=1269959136]
+script = ExtResource("1_xoid4")
+script_name = "WallWriting"
+description = "Wall Writing"
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=1731526009]
+visible = false
+modulate = Color(1, 0, 1, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+

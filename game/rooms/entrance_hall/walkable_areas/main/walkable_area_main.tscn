@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://4iw3j5y7qmhj"]
+
+[ext_resource type="Script" uid="uid://hq1fdva682ys" path="res://game/rooms/entrance_hall/walkable_areas/main/walkable_area_main.gd" id="1_12ppf"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_12ppf"]
+vertices = PackedVector2Array(150, 54, -150, 54, -150, -54, 150, -54)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-150, -54, 150, -54, 150, 54, -150, 54)])
+agent_radius = 0.0
+
+[node name="Main" type="Node2D" unique_id=401887819]
+position = Vector2(160, 90)
+script = ExtResource("1_12ppf")
+script_name = "Main"
+description = "Main"
+interaction_polygon = Array[PackedVector2Array]([PackedVector2Array(-150, -54, 150, -54, 150, 54, -150, 54)])
+
+[node name="Perimeter" type="NavigationRegion2D" parent="." unique_id=97273085]
+visible = false
+modulate = Color(0, 1, 0, 1)
+navigation_polygon = SubResource("NavigationPolygon_12ppf")

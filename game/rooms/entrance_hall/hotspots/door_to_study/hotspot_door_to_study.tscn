@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cr1g1gusnke6v"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/hotspots/door_to_study/hotspot_door_to_study.gd" id="1_g0171"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/hotspots/door_to_study/placeholder.png" id="tex_placeholder"]
+
+[node name="DoorToStudy" type="Area2D" unique_id=866456258]
+script = ExtResource("1_g0171")
+script_name = "DoorToStudy"
+description = "Door To Study"
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=825541148]
+visible = false
+modulate = Color(1, 0, 1, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+

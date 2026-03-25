@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://7veqnmirr22n"]
+
+[ext_resource type="Script" path="res://game/rooms/living_room/props/fireplace_compartment/prop_fireplace_compartment.gd" id="1_jflud"]
+[ext_resource type="Texture2D" path="res://game/rooms/living_room/props/fireplace_compartment/placeholder.png" id="tex_placeholder"]
+
+[node name="FireplaceCompartment" type="Area2D" unique_id=624546981]
+input_pickable = true
+script = ExtResource("1_jflud")
+script_name = "FireplaceCompartment"
+description = "Fireplace Compartment"
+clickable = true
+cursor = 1
+interaction_polygon = PackedVector2Array()
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=814758799]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=377908020]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=297939296]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=608076094]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

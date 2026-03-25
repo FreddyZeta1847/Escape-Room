@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://iqpwc0p4scj3"]
+
+[ext_resource type="Script" uid="uid://canwmif5scsxp" path="res://game/rooms/entrance_hall/room_entrance_hall.gd" id="1_58qb6"]
+[ext_resource type="PackedScene" uid="uid://4iw3j5y7qmhj" path="res://game/rooms/entrance_hall/walkable_areas/main/walkable_area_main.tscn" id="2_wdvqt"]
+[ext_resource type="PackedScene" uid="uid://bv8rmotdkr75n" path="res://game/rooms/entrance_hall/props/front_door/prop_front_door.tscn" id="3_k7lmm"]
+[ext_resource type="PackedScene" uid="uid://bq0v38tiyp75m" path="res://game/rooms/entrance_hall/props/wall_clock/prop_wall_clock.tscn" id="4_1dglv"]
+[ext_resource type="PackedScene" uid="uid://cci8jr51gypyj" path="res://game/rooms/entrance_hall/props/coat_rack/prop_coat_rack.tscn" id="5_a266l"]
+[ext_resource type="Texture2D" uid="uid://yrcruonhqs17" path="res://game/rooms/entrance_hall/props/front_door/placeholder.png" id="5_f25gs"]
+[ext_resource type="PackedScene" uid="uid://dm8henw78f88c" path="res://game/rooms/entrance_hall/props/mirror/prop_mirror.tscn" id="6_eiatg"]
+[ext_resource type="Texture2D" uid="uid://b6vko47pe0ywt" path="res://game/rooms/entrance_hall/props/wall_clock/placeholder.png" id="7_d650x"]
+[ext_resource type="PackedScene" uid="uid://bjehhwd87cc3p" path="res://game/rooms/entrance_hall/hotspots/welcome_mat/hotspot_welcome_mat.tscn" id="7_vqwsv"]
+[ext_resource type="PackedScene" uid="uid://wqfvspmcdmnb" path="res://game/rooms/entrance_hall/hotspots/door_to_living_room/hotspot_door_to_living_room.tscn" id="8_acg24"]
+[ext_resource type="Texture2D" uid="uid://ch66gudq1c44b" path="res://game/rooms/entrance_hall/props/coat_rack/placeholder.png" id="9_eut6q"]
+[ext_resource type="PackedScene" uid="uid://cr1g1gusnke6v" path="res://game/rooms/entrance_hall/hotspots/door_to_study/hotspot_door_to_study.tscn" id="9_fg0iu"]
+[ext_resource type="PackedScene" uid="uid://cpotf77q6sqjm" path="res://game/rooms/entrance_hall/markers/start/marker_start.tscn" id="10_udrpg"]
+[ext_resource type="PackedScene" uid="uid://bljxww8o2ltwf" path="res://game/rooms/entrance_hall/markers/from_living_room/marker_from_living_room.tscn" id="11_fgbyi"]
+[ext_resource type="Texture2D" uid="uid://u7vv5oykwx4q" path="res://game/rooms/entrance_hall/props/mirror/placeholder.png" id="11_y2adg"]
+[ext_resource type="PackedScene" uid="uid://dnfwmxfkpnk7a" path="res://game/rooms/entrance_hall/markers/from_study/marker_from_study.tscn" id="12_o1f0i"]
+[ext_resource type="Texture2D" uid="uid://bqycxoqyi512j" path="res://game/rooms/entrance_hall/bg_entrance_hall.png" id="tex_bg"]
+
+[node name="RoomEntranceHall" type="Node2D" unique_id=1999326026]
+script = ExtResource("1_58qb6")
+script_name = "EntranceHall"
+width = 320
+height = 180
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1168371640]
+texture_filter = 1
+position = Vector2(160, 90)
+texture = ExtResource("tex_bg")
+
+[node name="WalkableAreas" type="Node2D" parent="." unique_id=807458062]
+
+[node name="Main" parent="WalkableAreas" unique_id=401887819 instance=ExtResource("2_wdvqt")]
+
+[node name="Props" type="Node2D" parent="." unique_id=43045894]
+
+[node name="FrontDoor" parent="Props" unique_id=1204462669 instance=ExtResource("3_k7lmm")]
+position = Vector2(168, 24)
+texture = ExtResource("5_f25gs")
+look_at_point = Vector2(-38.554314, -17.174187)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="WallClock" parent="Props" unique_id=311835741 instance=ExtResource("4_1dglv")]
+position = Vector2(264, 120)
+texture = ExtResource("7_d650x")
+
+[node name="CoatRack" parent="Props" unique_id=371332406 instance=ExtResource("5_a266l")]
+position = Vector2(160, 90)
+texture = ExtResource("9_eut6q")
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Mirror" parent="Props" unique_id=580580309 instance=ExtResource("6_eiatg")]
+position = Vector2(312, 136)
+texture = ExtResource("11_y2adg")
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Hotspots" type="Node2D" parent="." unique_id=1648680286]
+
+[node name="WelcomeMat" parent="Hotspots" unique_id=760541286 instance=ExtResource("7_vqwsv")]
+position = Vector2(64, 72)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="DoorToLivingRoom" parent="Hotspots" unique_id=597845831 instance=ExtResource("8_acg24")]
+position = Vector2(8, 144)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="DoorToStudy" parent="Hotspots" unique_id=866456258 instance=ExtResource("9_fg0iu")]
+position = Vector2(8, 88)
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="Regions" type="Node2D" parent="." unique_id=15147276]
+
+[node name="Markers" type="Node2D" parent="." unique_id=1920548937]
+
+[node name="Start" parent="Markers" unique_id=402633279 instance=ExtResource("10_udrpg")]
+position = Vector2(158.97362, 135.67107)
+
+[node name="FromLivingRoom" parent="Markers" unique_id=533339348 instance=ExtResource("11_fgbyi")]
+position = Vector2(160, 90)
+
+[node name="FromStudy" parent="Markers" unique_id=1057520888 instance=ExtResource("12_o1f0i")]
+position = Vector2(160, 90)
+
+[node name="Characters" type="Node2D" parent="." unique_id=1328173585]
