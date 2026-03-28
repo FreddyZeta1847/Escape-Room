@@ -25,6 +25,18 @@ func _process(_delta: float) -> void:
 		cam.limit_right = 320
 		cam.limit_bottom = 180
 
+	# Continuously enforce y-sort fix: Background must render behind y-sorted
+	# props/hotspots. On the very first room load, Popochiu's deferred setup can
+	# undo or run after the one-shot fix, so we enforce it every frame.
+	var current_room = R.current if R else null
+	if current_room:
+		var bg = current_room.get_node_or_null("Background")
+		if bg and bg.z_index != -1:
+			bg.z_index = -1
+		var hotspots = current_room.get_node_or_null("Hotspots")
+		if hotspots and not hotspots.y_sort_enabled:
+			hotspots.y_sort_enabled = true
+
 
 func _on_node_added(node: Node) -> void:
 	if node is PopochiuRoom:

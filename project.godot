@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Escape Room AI"
-run/main_scene="res://game/rooms/entrance_hall/room_entrance_hall.tscn"
+run/main_scene="uid://3bqij5w35uwr"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 

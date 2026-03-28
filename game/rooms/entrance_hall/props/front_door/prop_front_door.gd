@@ -10,7 +10,12 @@ extends PopochiuProp
 func _on_click() -> void:
 	await C.player.walk_to_clicked()
 	await C.player.face_clicked()
-	await C.player.say("The front door is locked. I need a key.")
+	var opened := await InteractionSystem.try_open_with_inventory("front_door_key", [], "FrontDoor")
+	if opened:
+		await C.player.say("The key fits! I'm free!")
+		await C.player.say("I escaped the mansion!")
+	else:
+		await C.player.say("The front door is locked. I need a key.")
 
 
 # Called when the prop is double-clicked

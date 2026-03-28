@@ -17,8 +17,10 @@ func _on_room_entered() -> void:
 
 	if not C.player:
 		return
-
-	C.player.position = $Markers/FromEntranceHall.position
+	if C.player.last_room.is_empty():
+		C.player.position = $Markers/Start.position
+	else:
+		C.player.position = $Markers/FromEntranceHall.position
 
 
 # Called after the room transition completes; the room is now visible.

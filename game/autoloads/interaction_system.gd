@@ -81,6 +81,28 @@ func register_discovery(contained_items: Array, prop_name: String) -> void:
 	discovery_made.emit(prop_name)
 
 
+## Check all inventory items for one with the required attribute.
+## If found, auto-use it on the container. Returns true if opened.
+func try_open_with_inventory(
+	required_attribute: String,
+	contained_items: Array,
+	prop_name: String
+) -> bool:
+	if required_attribute.is_empty():
+		return false
+
+	for item_name: String in I._item_instances:
+		var item: PopochiuInventoryItem = I._item_instances[item_name]
+		if not item.in_inventory:
+			continue
+		if "attributes" in item and required_attribute in item.attributes:
+			await _give_contained_items(contained_items)
+			container_opened.emit(prop_name, item.script_name)
+			return true
+
+	return false
+
+
 ## Default message when using the wrong item on a container.
 func get_failure_message() -> String:
 	return "That doesn't seem to work."

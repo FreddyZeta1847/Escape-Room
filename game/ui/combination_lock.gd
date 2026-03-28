@@ -22,21 +22,17 @@ var _feedback_label: Label
 var _panel: PanelContainer
 var _bg: ColorRect
 var _is_open := false
+var _selected_digit := 0
+var _digit_cols: Array[VBoxContainer] = []
 
 
 func _ready() -> void:
 	_build_ui()
-	# BUG FIX: Previously only _panel was hidden, but _bg (full-screen ColorRect with
-	# mouse_filter=STOP on CanvasLayer 100) stayed visible — blocking ALL mouse input
-	# and darkening the screen with a 60% black overlay.
 	_bg.visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
 ## Show the combination lock overlay.
-## correct_code: the code to match (e.g. "4728")
-## contained_items: items to give on success (passed to InteractionSystem)
-## prop_name: name of the prop for signals/tracking
 func show_lock(correct_code: String, contained_items: Array, prop_name: String) -> void:
 	if _is_open:
 		return
@@ -44,10 +40,16 @@ func show_lock(correct_code: String, contained_items: Array, prop_name: String) 
 	_contained_items = contained_items
 	_prop_name = prop_name
 	_digits = [0, 0, 0, 0]
+	_selected_digit = 0
 	_update_digit_labels()
+	_update_selection()
 	_feedback_label.text = ""
 	_bg.visible = true
 	_is_open = true
+	# Ensure Popochiu's cursor keeps updating while paused
+	var cursor_node = get_tree().root.find_child("Cursor", true, false)
+	if cursor_node:
+		cursor_node.process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
 
 
@@ -57,25 +59,67 @@ func hide_lock() -> void:
 	get_tree().paused = false
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not _is_open:
+		return
+
+	if event is InputEventKey and event.pressed:
+		match event.keycode:
+			KEY_LEFT:
+				_selected_digit = max(0, _selected_digit - 1)
+				_update_selection()
+			KEY_RIGHT:
+				_selected_digit = min(3, _selected_digit + 1)
+				_update_selection()
+			KEY_UP:
+				_on_digit_up(_selected_digit)
+			KEY_DOWN:
+				_on_digit_down(_selected_digit)
+			KEY_ENTER, KEY_KP_ENTER:
+				_on_try_pressed()
+			KEY_ESCAPE:
+				_on_close_pressed()
+			_:
+				# Number keys 0-9
+				if event.keycode >= KEY_0 and event.keycode <= KEY_9:
+					_digits[_selected_digit] = event.keycode - KEY_0
+					_update_digit_labels()
+					if _selected_digit < 3:
+						_selected_digit += 1
+						_update_selection()
+				elif event.keycode >= KEY_KP_0 and event.keycode <= KEY_KP_9:
+					_digits[_selected_digit] = event.keycode - KEY_KP_0
+					_update_digit_labels()
+					if _selected_digit < 3:
+						_selected_digit += 1
+						_update_selection()
+		get_viewport().set_input_as_handled()
+
+
 func _build_ui() -> void:
 	layer = 100
+	follow_viewport_enabled = true
 
-	# Full-screen dimming background (hidden by default, shown when lock opens)
+	# Full-screen dimming background
 	_bg = ColorRect.new()
 	_bg.color = Color(0, 0, 0, 0.6)
 	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_bg.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(_bg)
 
-	# Centered panel
+	# Centered panel — compact to fit 320x180 viewport
 	_panel = PanelContainer.new()
 	_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_panel.custom_minimum_size = Vector2(200, 120)
-	_panel.position = Vector2(-100, -60)
+	_panel.custom_minimum_size = Vector2(160, 100)
+	_panel.anchor_top = 0.0
+	_panel.anchor_bottom = 0.0
+	_panel.anchor_left = 0.5
+	_panel.anchor_right = 0.5
+	_panel.position = Vector2(-80, 10)
 	_bg.add_child(_panel)
 
 	var main_vbox := VBoxContainer.new()
-	main_vbox.add_theme_constant_override("separation", 6)
+	main_vbox.add_theme_constant_override("separation", 2)
 	main_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	_panel.add_child(main_vbox)
 
@@ -87,31 +131,33 @@ func _build_ui() -> void:
 
 	# Digit spinners row
 	var digits_hbox := HBoxContainer.new()
-	digits_hbox.add_theme_constant_override("separation", 8)
+	digits_hbox.add_theme_constant_override("separation", 2)
 	digits_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	main_vbox.add_child(digits_hbox)
 
 	for i in range(4):
 		var digit_col := VBoxContainer.new()
+		digit_col.add_theme_constant_override("separation", 0)
 		digit_col.alignment = BoxContainer.ALIGNMENT_CENTER
 		digits_hbox.add_child(digit_col)
+		_digit_cols.append(digit_col)
 
 		var up_btn := Button.new()
 		up_btn.text = "^"
-		up_btn.custom_minimum_size = Vector2(24, 18)
+		up_btn.custom_minimum_size = Vector2(20, 12)
 		up_btn.pressed.connect(_on_digit_up.bind(i))
 		digit_col.add_child(up_btn)
 
 		var digit_label := Label.new()
 		digit_label.text = "0"
 		digit_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		digit_label.custom_minimum_size = Vector2(24, 18)
+		digit_label.custom_minimum_size = Vector2(20, 12)
 		digit_col.add_child(digit_label)
 		_digit_labels.append(digit_label)
 
 		var down_btn := Button.new()
 		down_btn.text = "v"
-		down_btn.custom_minimum_size = Vector2(24, 18)
+		down_btn.custom_minimum_size = Vector2(20, 12)
 		down_btn.pressed.connect(_on_digit_down.bind(i))
 		digit_col.add_child(down_btn)
 
@@ -124,19 +170,19 @@ func _build_ui() -> void:
 
 	# Buttons row
 	var btn_hbox := HBoxContainer.new()
-	btn_hbox.add_theme_constant_override("separation", 10)
+	btn_hbox.add_theme_constant_override("separation", 6)
 	btn_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	main_vbox.add_child(btn_hbox)
 
 	var try_btn := Button.new()
 	try_btn.text = "Try"
-	try_btn.custom_minimum_size = Vector2(50, 20)
+	try_btn.custom_minimum_size = Vector2(40, 14)
 	try_btn.pressed.connect(_on_try_pressed)
 	btn_hbox.add_child(try_btn)
 
 	var close_btn := Button.new()
 	close_btn.text = "Close"
-	close_btn.custom_minimum_size = Vector2(50, 20)
+	close_btn.custom_minimum_size = Vector2(40, 14)
 	close_btn.pressed.connect(_on_close_pressed)
 	btn_hbox.add_child(close_btn)
 
@@ -154,6 +200,14 @@ func _on_digit_down(index: int) -> void:
 func _update_digit_labels() -> void:
 	for i in range(4):
 		_digit_labels[i].text = str(_digits[i])
+
+
+func _update_selection() -> void:
+	for i in range(4):
+		if i == _selected_digit:
+			_digit_labels[i].add_theme_color_override("font_color", Color.YELLOW)
+		else:
+			_digit_labels[i].remove_theme_color_override("font_color")
 
 
 func _on_try_pressed() -> void:

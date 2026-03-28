@@ -4,7 +4,7 @@
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_4qyo0"]
 vertices = PackedVector2Array(150, 80, -150, 80, -150, -80, 150, -80)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(0, 2, 3)])
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-150, -80, -150, 80, 150, 80, 150, -80)])
 agent_radius = 0.0
 

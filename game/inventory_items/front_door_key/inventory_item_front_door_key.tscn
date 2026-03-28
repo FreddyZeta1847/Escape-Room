@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://csa2ac45u8fit"]
 
 [ext_resource type="Script" path="res://game/inventory_items/front_door_key/inventory_item_front_door_key.gd" id="1_wn8tl"]
+[ext_resource type="Texture2D" path="res://game/inventory_items/front_door_key/icon_front_door_key.png" id="2_icon"]
 
 [node name="ItemFrontDoorKey" type="TextureRect" unique_id=2093835625]
 texture_filter = 1
+texture = ExtResource("2_icon")
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 0

@@ -33,42 +33,44 @@ texture = ExtResource("tex_bg")
 [node name="Props" type="Node2D" parent="." unique_id=1557893428]
 
 [node name="Fireplace" parent="Props" unique_id=539441366 instance=ExtResource("2_m8624")]
-position = Vector2(80, 50)
+position = Vector2(68, 34)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="FireplaceCompartment" parent="Props" unique_id=624546981 instance=ExtResource("3_e27ab")]
-position = Vector2(95, 70)
+position = Vector2(75, 50)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="SmallDrawer" parent="Props" unique_id=1864179246 instance=ExtResource("4_r472r")]
-position = Vector2(200, 80)
+position = Vector2(13, 107)
 texture = ExtResource("7_whnqv")
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Bookshelf" parent="Props" unique_id=2019641792 instance=ExtResource("5_yskj3")]
-position = Vector2(30, 60)
+position = Vector2(-1, 69)
+walk_to_point = Vector2(35.407898, -1.0263214)
+look_at_point = Vector2(106.223694, 28.223679)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Couch" parent="Props" unique_id=368326492 instance=ExtResource("6_d0rmh")]
-position = Vector2(160, 120)
+position = Vector2(161, 37)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="BirthdayCake" parent="Props" unique_id=439061941 instance=ExtResource("7_c2uhb")]
-position = Vector2(240, 100)
+position = Vector2(233, 48)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Painting" parent="Props" unique_id=483856632 instance=ExtResource("8_usut8")]
-position = Vector2(140, 30)
+position = Vector2(156, 170)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Hotspots" type="Node2D" parent="." unique_id=479431589]
 
 [node name="MantleInscription" parent="Hotspots" unique_id=1265294239 instance=ExtResource("9_nrauh")]
-position = Vector2(80, 35)
+position = Vector2(78, 155)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="DoorToEntranceHall" parent="Hotspots" unique_id=285664591 instance=ExtResource("10_sqd88")]
-position = Vector2(300, 90)
+position = Vector2(292, 103)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Regions" type="Node2D" parent="." unique_id=1160372218]
@@ -76,6 +78,6 @@ interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 [node name="Markers" type="Node2D" parent="." unique_id=526091740]
 
 [node name="FromEntranceHall" parent="Markers" unique_id=579278654 instance=ExtResource("12_wyikr")]
-position = Vector2(270, 140)
+position = Vector2(266.2237, 103.85527)
 
 [node name="Characters" type="Node2D" parent="." unique_id=1611032018]

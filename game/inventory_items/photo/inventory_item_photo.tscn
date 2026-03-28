@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://dysygp5d6ju4k"]
 
 [ext_resource type="Script" path="res://game/inventory_items/photo/inventory_item_photo.gd" id="1_bnum8"]
+[ext_resource type="Texture2D" path="res://game/inventory_items/photo/icon_photo.png" id="2_icon"]
 
 [node name="ItemPhoto" type="TextureRect" unique_id=1372021229]
 texture_filter = 1
+texture = ExtResource("2_icon")
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 0

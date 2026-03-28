@@ -1,4 +1,3 @@
 [gd_scene format=3 uid="uid://bljxww8o2ltwf"]
 
 [node name="FromLivingRoom" type="Marker2D" unique_id=533339348]
-visible = false

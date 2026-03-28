@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bk0w4ngi5i5qu" path="res://game/rooms/study/walkable_areas/main/walkable_area_main.gd" id="1_pdgng"]
 
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_ac8l8"]
-vertices = PackedVector2Array(150, 80, -150, 80, -150, -80, 150, -80)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(0, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-150, -80, -150, 80, 150, 80, 150, -80)])
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_pdgng"]
+vertices = PackedVector2Array(152, 86, -152, 86, -152, -82, 152, -82)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-152, -82, 152, -82, 152, 86, -152, 86)])
 agent_radius = 0.0
 
 [node name="Main" type="Node2D" unique_id=1555660396]
@@ -13,9 +13,9 @@ position = Vector2(160, 90)
 script = ExtResource("1_pdgng")
 script_name = "Main"
 description = "Main"
-interaction_polygon = Array[PackedVector2Array]([PackedVector2Array(-150, -80, -150, 80, 150, 80, 150, -80)])
+interaction_polygon = Array[PackedVector2Array]([PackedVector2Array(-152, -82, 152, -82, 152, 86, -152, 86)])
 
 [node name="Perimeter" type="NavigationRegion2D" parent="." unique_id=848407952]
 visible = false
 modulate = Color(0, 1, 0, 1)
-navigation_polygon = SubResource("NavigationPolygon_ac8l8")
+navigation_polygon = SubResource("NavigationPolygon_pdgng")
