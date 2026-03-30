@@ -38,12 +38,7 @@ func _on_middle_click() -> void:
 
 # Called when the prop is clicked while an inventory item is selected
 func _on_item_used(_item: PopochiuInventoryItem) -> void:
-	var success := await InteractionSystem.try_use_item(_item, "front_door_key", [], "FrontDoor")
-	if success:
-		await C.player.say("The key fits! I'm free!")
-		await C.player.say("I escaped the mansion!")
-	else:
-		await C.player.say(InteractionSystem.get_failure_message())
+	PopochiuUtils.e.command_fallback()
 
 
 # Called when an inventory item linked to this Prop (`link_to_item`) is removed

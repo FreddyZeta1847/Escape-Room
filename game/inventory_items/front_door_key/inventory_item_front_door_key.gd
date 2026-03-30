@@ -15,9 +15,9 @@ func _on_click() -> void:
 	await C.player.say("A heavy iron key. This must open the front door!")
 
 
-# Called when the item is right-clicked in the inventory
+# Called when the item is right-clicked in the inventory — open inspector
 func _on_right_click() -> void:
-	await C.player.say("An old key with the Blackwood crest engraved on it.")
+	InventoryInspector.show_item(script_name)
 
 
 # Called when the item is middle-clicked in the inventory

@@ -12,14 +12,12 @@ var attributes := ["fingerprint"]
 #region Virtual ####################################################################################
 # Called when the item is clicked in the inventory
 func _on_click() -> void:
-	# Replace the call to E.command_fallback() to implement your code.
-	E.command_fallback()
+	await C.player.say("A pair of leather gloves. Good grip.")
 
 
-# Called when the item is right-clicked in the inventory
+# Called when the item is right-clicked in the inventory — open inspector
 func _on_right_click() -> void:
-	# Replace the call to E.command_fallback() to implement your code.
-	E.command_fallback()
+	InventoryInspector.show_item(script_name)
 
 
 # Called when the item is middle-clicked in the inventory

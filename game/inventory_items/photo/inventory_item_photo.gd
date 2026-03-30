@@ -8,6 +8,9 @@ var state: Data = load("res://game/inventory_items/photo/inventory_item_photo.tr
 ## Attributes used by the InteractionSystem for attribute-based locks.
 var attributes := []
 
+## Back texture shown in the inspection overlay (shows "7_2").
+var back_texture: Texture2D = preload("res://game/inventory_items/photo/icon_photo_back.png")
+
 
 #region Virtual ####################################################################################
 # Called when the item is clicked in the inventory
@@ -15,9 +18,9 @@ func _on_click() -> void:
 	await C.player.say("A photo of someone. Maybe there's something on the back.")
 
 
-# Called when the item is right-clicked in the inventory — examine the photo
+# Called when the item is right-clicked in the inventory — open inspector
 func _on_right_click() -> void:
-	await C.player.say("You flip the photo over. On the back, someone wrote: 7_2")
+	InventoryInspector.show_item(script_name)
 
 
 # Called when the item is middle-clicked in the inventory

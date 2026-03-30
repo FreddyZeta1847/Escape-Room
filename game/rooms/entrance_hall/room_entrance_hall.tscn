@@ -78,9 +78,9 @@ interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 position = Vector2(161.5394, 139.26317)
 
 [node name="FromLivingRoom" parent="Markers" unique_id=533339348 instance=ExtResource("11_fgbyi")]
-position = Vector2(28.631523, 123.355286)
+position = Vector2(29.019768, 120.75903)
 
 [node name="FromStudy" parent="Markers" unique_id=1057520888 instance=ExtResource("12_o1f0i")]
-position = Vector2(27.605213, 63.82895)
+position = Vector2(28.764538, 64.877625)
 
 [node name="Characters" type="Node2D" parent="." unique_id=1328173585]

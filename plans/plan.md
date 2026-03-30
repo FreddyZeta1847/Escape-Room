@@ -104,25 +104,28 @@ The combination is **4728**. Clues are scattered but **none are mandatory** — 
 
 **Intended Flow (not enforced as linear):**
 1. **Explore freely** — all 3 rooms are accessible from the start
-2. **Clue gathering** — clock, cake, Marco's hints, Mrs. Whitmore's stories all help
-3. **Find Gloves** (fireplace compartment, guided by Marco's riddles) → use on drawer (attribute: `fingerprint`) → get Photo
-4. **Combine knowledge** → try combination on safe → get Front Door Key
-5. **Use Key on Front Door** → escape!
+2. **Discover the brick** — click the loose brick → "I can't move it on my own"
+3. **Convince Marco** (social puzzle) — talk to him, build trust through dialogue → cutscene → he moves the brick → **Gloves**
+4. **Use Gloves on drawer** → attribute match (`fingerprint`) → get **Photo**
+5. **Gather combination clues** — clock (4), photo back (7_2), Mrs. Whitmore (8)
+6. **Enter 4728 on safe** → get **Front Door Key**
+7. **Use Key on Front Door** → escape!
 
-**Key design**: Marco is essential — without his cryptic hints, the player would never think to check behind the fireplace bricks. This makes NPC dialogue a core mechanic, not optional. But the combination lock rewards exploration *and* luck — items are hints, not gates.
+**Key design**: Marco is essential — the player physically cannot move the brick alone. They must convince Marco through free-form LLM dialogue, making NPC conversation the core mechanic. The combination lock rewards exploration *and* conversation — items are hints, not gates.
 
-**Sub-puzzle: Fireplace Hidden Compartment**
-- Fireplace has a clickable loose brick (visible only as a subtle hotspot)
-- On first click: "The bricks seem solid... but one feels slightly different"
-- Without Marco's hints, player is unlikely to find it — it blends into the background
-- On repeated click / after Marco's hints: reveals **Gloves** inside
+**Sub-puzzle: Fireplace Brick (Social — Marco)**
+- Loose brick is always visible and clickable in the Living Room
+- Player alone: "This brick feels different... but I can't move it on my own."
+- Marco sits nearby, scared but loyal. He noticed the brick but won't act.
+- Player must persuade Marco through dialogue (trust bar: 0→100, LLM self-scoring)
+- When trust reaches 100: cutscene — Marco moves the brick, reveals **Gloves**
+- See `plans/phase4.md` for full Marco mechanic details
 
 **Sub-puzzle: Fingerprint Drawer (attribute-based)**
 - Drawer in Living Room has a fingerprint scanner
 - `required_attribute = "fingerprint"`
-- Player uses any item with `"fingerprint"` attribute on the drawer → it opens
+- When player clicks the drawer, the system auto-checks inventory for matching attribute
 - Currently only Gloves have this attribute, but the system supports adding more items later
-- Popochiu interaction: `_on_item_used(item)` checks `item.attributes` against `required_attribute`
 
 ### Item Definitions
 
@@ -141,7 +144,7 @@ Each container defines a `contained_items: Array[String]` — the items given to
 | Small Drawer | `"fingerprint"` | Attribute-based | Living Room | `["Photo"]` |
 | Safe | *none* | Combination (knowledge) | Study | `["FrontDoorKey"]` |
 | Front Door | `"front_door_key"` | Attribute-based | Entrance Hall | `[]` (triggers victory) |
-| Fireplace Compartment | *none* | Discovery (hidden hotspot) | Living Room | `["Gloves"]` |
+| Fireplace Brick | *none* | Social (convince Marco) | Living Room | `["Gloves"]` |
 
 ### Observable Items (Not collected, just information)
 
@@ -151,51 +154,20 @@ Each container defines a `contained_items: Array[String]` — the items given to
 | Birthday Cake | "Whose birthday?" → conversation prompt | Living Room (table) |
 | Photo Back | Shows "7_2" (hint for digits 7, 2) | Inventory (examine action) |
 
-### NPC Personas (System Prompts)
+### NPC Personas & Mechanics
 
-**Housekeeper — "Mrs. Whitmore"**
-```
-You are Mrs. Whitmore, an elderly housekeeper who has worked in this mansion for 30 years.
-You are helpful but speak in a rambling, nostalgic way.
-You know: The owner Mr. Blackwood was born on the 8th of March. The safe in the study
-holds something important. You don't know the safe combination.
-You must NOT directly say "the number is 8" — instead, talk about memories of the
-owner's birthday when asked. Give progressive hints.
-Keep responses under 2-3 sentences.
-```
+Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 
-**Friend — "Marco"**
-```
-You are Marco, a young philosophy student and close friend of the player.
-You speak in a poetic, cryptic, philosophical way — like riddles wrapped in metaphors.
-You are sitting in the living room observing everything with a contemplative eye.
+**Mrs. Whitmore** (Study) — Nostalgic housekeeper. Naturally mentions owner's birthday "the 8th of March" when asked. No special mechanic needed.
 
-You know: There is a hidden compartment behind a loose brick in the fireplace.
-You also noticed the clock in the entrance seems frozen in time.
+**Marco** (Living Room) — Scared but loyal friend. Social puzzle: player must convince him to move the brick through dialogue. Trust bar (0→100) driven by LLM self-scoring `[MOOD:X]` tags. When trust hits 100 → cutscene → Gloves.
 
-IMPORTANT RULES:
-- NEVER say directly "check the fireplace" or "there's a compartment behind the bricks"
-- Instead, speak poetically: "Where warmth once danced, secrets rest in stone's embrace"
-- If the player asks deeper follow-up questions, gradually become clearer but always stay poetic
-- Example progression:
-  1st hint: "The hearth holds more than memories of flame..."
-  2nd hint: "Stone and mortar guard what hands once hid... feel where the fire once breathed"
-  3rd hint: "Behind the dance of old embers, a brick yields to the curious touch"
-- Keep responses under 2-3 sentences.
-- You love philosophy and may quote thinkers if it fits naturally.
-```
-
-### Hint System via NPC
-- NPCs give **progressive hints** based on game state (injected into system prompt dynamically)
-- Game state tracked: `items_collected`, `rooms_visited`, `puzzles_solved`
-- Example state injection into system prompt:
-  ```
-  [GAME STATE: Player has visited: Entrance Hall, Living Room. Items: Gloves.
-   Puzzles solved: fireplace compartment. Not yet solved: drawer, safe.]
-  ```
-- **Marco**: If player hasn't found the compartment, his poetic hints focus on the fireplace. After finding it, he shifts to commenting on other observations.
-- **Mrs. Whitmore**: If player has the photo but hasn't asked about the birthday, she might reminisce: "Oh, Mr. Blackwood loved celebrations..."
-- Conversation history persists all session — NPCs remember previous exchanges even after the player leaves and returns
+### Game State Integration
+- Game state tracked: `items_collected`, `rooms_visited`, `puzzles_solved`, `marco_mood`, `marco_collaborated`
+- State injected into NPC system prompts dynamically each turn
+- Conversation history: 15-message sliding window per NPC, persists per session
+- Post-solve: NPCs acknowledge progress and shift to other topics
+- Guardrails: regex output filter blocks direct puzzle answers
 
 ---
 
@@ -296,29 +268,45 @@ IMPORTANT RULES:
 
 ## Phase 4: NPC System & Dialogue
 
-**Goal**: Both NPCs placed in rooms, LLM dialogue working, game-state-aware hints.
+**Goal**: Both NPCs placed in rooms, LLM dialogue working, Marco social puzzle functional. Full details in `plans/phase4.md`.
+
+### 4.0 Remove Poker Mechanic
+- [x] Delete poker prop/inventory item, update fireplace compartment to social gate
 
 ### 4.1 NPC Characters
-- [ ] Create Mrs. Whitmore character (placeholder sprite) in Study
-- [ ] Create Marco character (placeholder sprite) in Living Room
+- [x] Create Marco character (placeholder sprite) in Living Room near fireplace
+- [x] Create Mrs. Whitmore character (placeholder sprite) in Study near desk
 
 ### 4.2 Dialogue UI
-- [ ] Custom text input field (UI overlay on top of Popochiu)
-- [ ] Player clicks NPC → dialogue opens → player types → LLM responds as speech bubble
-- [ ] "Exit conversation" button
-- [ ] Loading indicator while waiting for LLM response
+- [x] Text input bar at bottom + NPC responds via Popochiu `say()`
+- [x] Trust bar (Marco only): ColorRect-based, red → yellow → green
+- [x] "Thinking..." status label while waiting for LLM
+- [x] ESC to exit, full-screen blocker prevents interaction during dialogue
 
 ### 4.3 LLM Wiring
-- [ ] NPC click → `LlmManager.chat(npc_id, message)` → display response
-- [ ] System prompts loaded per NPC (Mrs. Whitmore, Marco)
-- [ ] Game state injected into system prompts dynamically
-- [ ] Conversation history persists per NPC per session
+- [x] Per-NPC system prompts (Marco: social puzzle, Mrs. Whitmore: birthday clue)
+- [x] Curl-based HTTP (bypasses Godot HTTPRequest 30s delay on Windows)
+- [x] `[MOOD:X]` tag parsing → trust bar update
+- [x] Regex output filter + bracket tag stripping
+- [x] 15-message sliding window history per NPC
+- [x] Ollama context flush on game start
 
-### 4.4 Test NPC Interactions
-- [ ] Marco gives progressive poetic hints about the fireplace
-- [ ] Mrs. Whitmore mentions the owner's birthday naturally
-- [ ] Hints adapt based on game state (items found, puzzles solved)
-- [ ] Offline fallback: graceful error if Ollama is not running
+### 4.4 Marco Collaboration Cutscene
+- [ ] Trust hits 50 → Marco walks to fireplace → moves brick → Gloves available
+- **Status**: Untested — mood scoring needs to reliably reach threshold first
+
+### 4.5 Known Issues (In Progress)
+- [ ] Marco mood scoring inconsistent — model sometimes forgets `[MOOD:X]` tag or gives wrong values
+- [ ] Marco character consistency — occasionally breaks role (third person, not scared)
+- [ ] UTF-8 mojibake from curl on Windows (smart quotes garbled)
+- [ ] Long responses truncated by Popochiu `say()` display
+- [ ] Cutscene not yet triggered/tested in gameplay
+
+### 4.6 Testing Completed
+- [x] Mrs. Whitmore responds in character, mentions birthday naturally
+- [x] Dialogue UI blocks game interaction while open
+- [x] Offline fallback works (graceful error when Ollama not running)
+- [x] Response times acceptable (2-8 seconds with `qwen2.5:1.5b` via curl)
 
 ---
 

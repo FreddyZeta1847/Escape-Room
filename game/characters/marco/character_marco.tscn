@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/characters/marco/character_marco.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://game/characters/marco/marco.png" id="2_sprite"]
+
+[node name="CharacterMarco" type="Area2D"]
+script = ExtResource("1_script")
+script_name = "Marco"
+description = "Marco"
+clickable = true
+cursor = 8
+interaction_polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="ScalingPolygon" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_sprite")
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="."]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

@@ -8,6 +8,11 @@ var items_collected: Array[String] = []
 var rooms_visited: Array[String] = []
 var puzzles_solved: Array[String] = []
 
+## Marco's trust/mood level (0-100). At 100 he agrees to help.
+var marco_mood := 0
+## True after Marco's collaboration cutscene (brick moved).
+var marco_collaborated := false
+
 
 func _ready() -> void:
 	# Auto-track puzzle solves from InteractionSystem signals
@@ -34,6 +39,11 @@ func solve_puzzle(puzzle_id: String) -> void:
 		puzzles_solved.append(puzzle_id)
 
 
+## Update Marco's mood by delta, clamped to 0-100.
+func increment_marco_mood(delta: int) -> void:
+	marco_mood = clampi(marco_mood + delta, 0, 100)
+
+
 ## Returns a formatted string for LLM system prompt injection.
 func get_state_summary() -> String:
 	var parts: Array[String] = []
@@ -46,6 +56,16 @@ func get_state_summary() -> String:
 
 	if puzzles_solved.size() > 0:
 		parts.append("Puzzles solved: %s" % ", ".join(puzzles_solved))
+
+	if marco_collaborated:
+		parts.append("Marco has already helped move the brick")
+	elif marco_mood > 0:
+		var level := "low"
+		if marco_mood >= 70:
+			level = "high"
+		elif marco_mood >= 30:
+			level = "medium"
+		parts.append("Player trust level with Marco: %s (%d/100)" % [level, marco_mood])
 
 	if parts.is_empty():
 		return ""

@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bpwfjq48mn2pl" path="res://game/rooms/study/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.tscn" id="8_47ilj"]
 [ext_resource type="PackedScene" uid="uid://hafowg4rjtbr" path="res://game/rooms/study/markers/from_entrance_hall/marker_from_entrance_hall.tscn" id="10_h27hv"]
 [ext_resource type="PackedScene" uid="uid://j2hjdlpfn8ie" path="res://game/rooms/study/markers/start/marker_start.tscn" id="12_rgpa3"]
+[ext_resource type="PackedScene" path="res://game/characters/mrs_whitmore/character_mrs_whitmore.tscn" id="13_whitmore"]
 [ext_resource type="Texture2D" uid="uid://c3enoblxl7pk0" path="res://game/rooms/study/bg_study.png" id="tex_bg"]
 
 [node name="RoomStudy" type="Node2D" unique_id=1086019223]
@@ -71,3 +72,6 @@ position = Vector2(259, 105)
 position = Vector2(209.06915, 132.3779)
 
 [node name="Characters" type="Node2D" parent="." unique_id=1917195330]
+
+[node name="MrsWhitmore" parent="Characters" unique_id=580166156 instance=ExtResource("13_whitmore")]
+position = Vector2(200, 70)

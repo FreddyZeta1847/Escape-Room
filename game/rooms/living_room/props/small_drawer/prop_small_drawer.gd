@@ -10,7 +10,15 @@ extends PopochiuProp
 func _on_click() -> void:
 	await C.player.walk_to_clicked()
 	await C.player.face_clicked()
-	await C.player.say("A small drawer with a fingerprint scanner. It's locked.")
+	var opened := await InteractionSystem.try_open_with_inventory(
+		"fingerprint", ["Photo"], "SmallDrawer"
+	)
+	if opened:
+		await C.player.say("The scanner accepted the fingerprint from the gloves!")
+		await C.player.say("There's a photo inside.")
+		clickable = false
+	else:
+		await C.player.say("A small drawer with a fingerprint scanner. It's locked.")
 
 
 # Called when the prop is double-clicked
@@ -33,12 +41,7 @@ func _on_middle_click() -> void:
 
 # Called when the prop is clicked while an inventory item is selected
 func _on_item_used(_item: PopochiuInventoryItem) -> void:
-	var success := await InteractionSystem.try_use_item(_item, "fingerprint", ["Photo"], "SmallDrawer")
-	if success:
-		await C.player.say("The scanner accepted the fingerprint from the gloves!")
-		await C.player.say("There's a photo inside.")
-	else:
-		await C.player.say("That doesn't seem to work on the scanner.")
+	PopochiuUtils.e.command_fallback()
 
 
 # Called when an inventory item linked to this Prop (`link_to_item`) is removed

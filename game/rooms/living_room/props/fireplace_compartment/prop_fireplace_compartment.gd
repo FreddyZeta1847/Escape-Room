@@ -8,16 +8,14 @@ extends PopochiuProp
 #region Virtual ####################################################################################
 # Called when the prop is clicked
 func _on_click() -> void:
-	if times_clicked <= 1:
-		await C.player.walk_to_clicked()
-		await C.player.face_clicked()
-		await C.player.say("One of the bricks feels slightly different...")
-	else:
-		await C.player.walk_to_clicked()
-		await C.player.say("There's something behind this brick!")
+	await C.player.walk_to_clicked()
+	await C.player.face_clicked()
+	if GameState.marco_collaborated:
 		await InteractionSystem.register_discovery(["Gloves"], "FireplaceCompartment")
-		await C.player.say("I found a pair of gloves!")
-		disable()
+		await C.player.say("There are gloves hidden behind the brick!")
+		clickable = false
+	else:
+		await C.player.say("This brick feels different... but I can't move it on my own.")
 
 
 # Called when the prop is double-clicked
@@ -36,15 +34,6 @@ func _on_right_click() -> void:
 func _on_middle_click() -> void:
 	# Replace the call to E.command_fallback() to implement your code.
 	PopochiuUtils.e.command_fallback()
-
-
-# Called when the prop is clicked while an inventory item is selected
-func _on_item_used(_item: PopochiuInventoryItem) -> void:
-	# Replace the call to E.command_fallback() with your own logic.
-	PopochiuUtils.e.command_fallback()
-	# Example: if the Key is used on this prop, make the player speak.
-#	if _item == I.Key:
-#		await C.player.say("This stuff has no lock!")
 
 
 # Called when an inventory item linked to this Prop (`link_to_item`) is removed

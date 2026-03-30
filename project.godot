@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Escape Room AI"
-run/main_scene="uid://3bqij5w35uwr"
+run/main_scene="uid://dpyqq2xfiaf7j"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -32,6 +32,8 @@ GameState="*res://game/autoloads/game_state.gd"
 InteractionSystem="*res://game/autoloads/interaction_system.gd"
 CombinationLock="*res://game/ui/combination_lock.gd"
 RoomSetup="*res://game/autoloads/room_setup.gd"
+InventoryInspector="*res://game/ui/inventory_inspector.gd"
+DialogueUI="*res://game/ui/dialogue_ui.gd"
 
 [display]
 

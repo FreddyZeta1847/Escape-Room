@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://jlggp4i2hsn7" path="res://game/rooms/living_room/hotspots/mantle_inscription/hotspot_mantle_inscription.tscn" id="9_nrauh"]
 [ext_resource type="PackedScene" uid="uid://cxx60psn4h34w" path="res://game/rooms/living_room/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.tscn" id="10_sqd88"]
 [ext_resource type="PackedScene" uid="uid://bmotsy1bg5gf2" path="res://game/rooms/living_room/markers/from_entrance_hall/marker_from_entrance_hall.tscn" id="12_wyikr"]
+[ext_resource type="PackedScene" path="res://game/characters/marco/character_marco.tscn" id="13_marco"]
 [ext_resource type="Texture2D" uid="uid://8vanict67h1w" path="res://game/rooms/living_room/bg_living_room.png" id="tex_bg"]
 
 [node name="RoomLivingRoom" type="Node2D" unique_id=466270860]
@@ -81,3 +82,6 @@ interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 position = Vector2(266.2237, 103.85527)
 
 [node name="Characters" type="Node2D" parent="." unique_id=1611032018]
+
+[node name="Marco" parent="Characters" instance=ExtResource("13_marco")]
+position = Vector2(100, 60)

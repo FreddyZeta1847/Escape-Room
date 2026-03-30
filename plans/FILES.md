@@ -30,10 +30,16 @@ escape-room-ai/
 │   │   └── room_setup.gd            # Runtime fixes: y-sort, camera limits, textures
 │   │
 │   ├── ui/
-│   │   └── combination_lock.gd      # 4-digit combo lock overlay (autoload, no .tscn)
+│   │   ├── combination_lock.gd      # 4-digit combo lock overlay (autoload, no .tscn)
+│   │   ├── inventory_inspector.gd   # Item inspection overlay with front/back flip
+│   │   └── dialogue_ui.gd          # NPC dialogue: text input + trust bar (Marco)
 │   │
 │   ├── characters/
-│   │   └── player/
+│   │   ├── player/
+│   │   ├── marco/                   # NPC: scared friend, social puzzle (trust bar)
+│   │   ├── mrs_whitmore/            # NPC: housekeeper, birthday clue
+│   │   └── (pattern: character_*.gd / .tscn / .tres / _state.gd / sprite.png)
+│   │   NOTE: player/ is the only one listed below:
 │   │       ├── character_player.gd / .tscn / .tres
 │   │       ├── character_player_state.gd
 │   │       └── player.png
@@ -45,9 +51,11 @@ escape-room-ai/
 │   │   ├── gloves/
 │   │   │   ├── inventory_item_gloves.gd / .tscn / .tres
 │   │   │   └── inventory_item_gloves_state.gd
-│   │   └── photo/
-│   │       ├── inventory_item_photo.gd / .tscn / .tres
-│   │       └── inventory_item_photo_state.gd
+│   │   ├── photo/
+│   │   │   ├── inventory_item_photo.gd / .tscn / .tres
+│   │   │   ├── inventory_item_photo_state.gd
+│   │   │   └── icon_photo_back.png          # Back of photo showing "7_2"
+│   │   └── (fireplace_poker removed — replaced by Marco social puzzle)
 │   │
 │   ├── rooms/
 │   │   ├── entrance_hall/
@@ -78,6 +86,7 @@ escape-room-ai/
 │   │   │   │   ├── bookshelf/
 │   │   │   │   ├── couch/
 │   │   │   │   ├── fireplace/
+│   │   │   │   ├── fireplace_compartment/ (social gate: Marco must collaborate first)
 │   │   │   │   ├── fireplace_compartment/
 │   │   │   │   ├── painting/
 │   │   │   │   └── small_drawer/
