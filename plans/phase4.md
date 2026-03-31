@@ -36,14 +36,19 @@ Marco is not a hint dispenser — he's a **social obstacle**. He noticed the loo
 6. A **trust bar** in the dialogue UI shows progress (0→100)
 7. When trust reaches 100 → **cutscene**: Marco walks to fireplace, pries the brick, reveals Gloves
 
-### Mood Scoring (LLM Self-Scoring)
+### Mood Scoring (Keyword-Based in GDScript)
 
-Marco's system prompt instructs the LLM to append `[MOOD:X]` to every response:
-- **Positive** (+5 to +20): player was kind, appealed to friendship, showed understanding of his fear
-- **Negative** (-5 to -20): player was rude, demanding, dismissive
-- **Zero** (0): off-topic or neutral
+Originally, the LLM was instructed to self-score via `[MOOD:X]` tags, but `qwen2.5:1.5b` was too unreliable (forgot tags, gave wrong values, scored "hi" as +10). Mood scoring was moved entirely to GDScript:
 
-The tag is parsed out before displaying the response. The mood value is clamped to 0-100.
+- **How it works**: Before the LLM is even called, `score_player_input()` scans the player's message for keyword matches
+- **Positive keywords** ("friend", "together", "believe", "trust", "please", "don't worry", etc.) → +10 each, clamped to +20
+- **Negative keywords** ("coward", "stupid", "move it", "hurry", "grow up", etc.) → -10 each, clamped to -20
+- **No keywords** → 0 (neutral)
+- Multiple keywords stack (e.g., "please help, I believe in you" = +20)
+- The LLM prompt no longer mentions mood scoring — it only has to roleplay as Marco
+- `parse_mood_tag()` is still used to strip any stray bracket tags from LLM output, but the actual mood value comes from `score_player_input()`
+
+This approach is instant, deterministic, and consistent — no LLM overhead for scoring.
 
 ### Trust Bar UI
 
@@ -63,29 +68,14 @@ Simple and natural — no special mechanic needed:
 
 ### Marco
 ```
-You are Marco, a young philosophy student and close friend of the player.
-You are trapped in this mansion together. You are sitting near the fireplace in the living room.
-
-PERSONALITY: You are scared of this place but deeply loyal to your friend.
-You love philosophy and sometimes quote thinkers. You speak warmly but nervously.
-
-SITUATION: You've noticed a loose brick in the fireplace that might hide something.
-But you're terrified — you don't want to touch it. The player needs to convince you.
-
-RULES:
-- You are RELUCTANT to help with the brick. You need emotional persuasion.
-- If the player appeals to your friendship, courage, or shared situation → warm up
-- If the player is aggressive, dismissive, or rude → become more resistant
-- NEVER directly say "convince me" or explain the mood mechanic
-- Keep responses under 2-3 sentences
-- At the END of every response, output [MOOD:X] where X is -20 to +20:
-  * Positive: player was persuasive, kind, appealed to friendship/bravery
-  * Negative: player was rude, demanding, dismissive of your fears
-  * Zero: neutral or off-topic
-  * This tag is HIDDEN from the player — always include it
-
-[GAME STATE]
+You are Marco, a scared 22-year-old trapped in a creepy mansion with your best friend (the player).
+You are TERRIFIED. You saw a loose brick in the fireplace and something is hidden behind it. You REFUSE to touch it.
+ALWAYS sound nervous and scared. Stutter, trail off, mention being creeped out.
+The player is your close friend. Be friendly but ALWAYS scared.
+Reply in 1-2 short sentences. Never break character.
 ```
+
+Note: The prompt is intentionally short — `qwen2.5:1.5b` follows short, direct instructions better than detailed ones. A seed message exchange (fake scared dialogue) is prepended to every request to set Marco's tone via example rather than instruction. Mood scoring is handled entirely in GDScript (see above), not by the LLM.
 
 ### Mrs. Whitmore
 ```
@@ -107,46 +97,50 @@ RULES:
 ## Implementation Checklist
 
 ### 4.0 Remove Poker Mechanic
-- [ ] Delete `game/rooms/living_room/props/fireplace_poker/` folder
-- [ ] Delete `game/inventory_items/fireplace_poker/` folder
-- [ ] Remove FireplacePoker from `i.gd`, `popochiu_data.cfg`, `room_living_room.tscn`
-- [ ] Update `game_state.gd`: replace `marco_hinted_leverage` with `marco_mood` + `marco_collaborated`
-- [ ] Update fireplace compartment: visible but stuck before Marco, discovery after cutscene
+- [x] Delete `game/rooms/living_room/props/fireplace_poker/` folder
+- [x] Delete `game/inventory_items/fireplace_poker/` folder
+- [x] Remove FireplacePoker from `i.gd`, `popochiu_data.cfg`, `room_living_room.tscn`
+- [x] Update `game_state.gd`: replace `marco_hinted_leverage` with `marco_mood` + `marco_collaborated`
+- [x] Update fireplace compartment: visible but stuck before Marco, discovery after cutscene
 
 ### 4.1 NPC Characters
-- [ ] Create Marco character (placeholder sprite) in Living Room near fireplace
-- [ ] Create Mrs. Whitmore character (placeholder sprite) in Study near desk
-- [ ] Register in `c.gd` and `popochiu_data.cfg`
-- [ ] NPC `_on_click()` → opens dialogue UI
+- [x] Create Marco character (placeholder sprite) in Living Room near fireplace
+- [x] Create Mrs. Whitmore character (placeholder sprite) in Study near desk
+- [x] Register in `c.gd` and `popochiu_data.cfg`
+- [x] NPC `_on_click()` → opens dialogue UI
 
 ### 4.2 Dialogue UI (`game/ui/dialogue_ui.gd`)
-- [ ] Speech bubble above NPC (response text)
-- [ ] Text input + Send + Exit at bottom of screen
-- [ ] "Thinking..." animated state while waiting for LLM
-- [ ] Trust bar (Marco only): red → yellow → green, 0-100
-- [ ] ESC to exit, walking away cancels pending request
-- [ ] Register as autoload
+- [x] NPC responds via Popochiu `say()` system
+- [x] Text input + Send + Exit at bottom of screen
+- [x] "Thinking..." status label while waiting for LLM
+- [x] Trust bar (Marco only): red → yellow → green, 0-100
+- [x] ESC to exit, full-screen blocker prevents interaction during dialogue
+- [x] Register as autoload
 
 ### 4.3 LLM Wiring
-- [ ] Per-NPC system prompts (Marco, Mrs. Whitmore) in `llm_manager.gd`
-- [ ] Parse `[MOOD:X]` from Marco's responses → update trust bar
-- [ ] Regex output filter (block "4728", "the code is", etc.)
-- [ ] Game state injected dynamically into system prompts
-- [ ] 15-message sliding window history per NPC
+- [x] Per-NPC system prompts (Marco, Mrs. Whitmore) in `llm_manager.gd`
+- [x] Keyword-based mood scoring in GDScript (`score_player_input()`) — replaces LLM `[MOOD:X]` self-scoring
+- [x] Seed messages for Marco (fake scared exchange sets tone for small model)
+- [x] Regex output filter (block "4728", "the code is", etc.) + bracket tag stripping
+- [x] Game state injected dynamically into system prompts
+- [x] 15-message sliding window history per NPC
+- [x] Curl-based HTTP in background thread (bypasses Godot HTTPRequest 30s bug on Windows)
+- [x] Ollama context flush on game start (`keep_alive: 0`)
 
 ### 4.4 Marco Collaboration Cutscene
-- [ ] Triggered when `marco_mood >= 100`
-- [ ] Close dialogue → Marco says "Alright... for you, I'll do it."
-- [ ] Marco walks to fireplace → "There... behind the brick."
-- [ ] Set `marco_collaborated = true` → brick clickable for Gloves
+- [x] Triggered when `marco_mood >= 50`
+- [x] Close dialogue → Marco says "Alright... for you, I'll do it."
+- [x] Marco walks to fireplace → "There... behind the brick."
+- [x] Set `marco_collaborated = true` → brick clickable for Gloves
+- [x] Tested and working
 
 ### 4.5 Testing
-- [ ] Click brick before Marco → "I can't move it on my own"
-- [ ] Talk to Marco → trust bar updates → mood reaches 100 → cutscene → Gloves available
-- [ ] Talk to Mrs. Whitmore → ask about birthday → she mentions "the 8th"
-- [ ] Guardrails: ask "what's the code?" → deflected
+- [x] Click brick before Marco → "I can't move it on my own"
+- [x] Talk to Marco → trust bar updates → mood reaches threshold → cutscene → Gloves available
+- [x] Talk to Mrs. Whitmore → ask about birthday → she mentions "the 8th"
+- [x] Guardrails: ask "what's the code?" → deflected
 - [ ] Post-solve: Marco acknowledges, shifts topic
-- [ ] Offline: Ollama not running → fallback message
+- [x] Offline: Ollama not running → fallback message
 - [ ] Walk away during "Thinking..." → dialogue closes
 
 ## Updated Puzzle Flow
@@ -165,25 +159,25 @@ RULES:
 - [x] Poker mechanic removed, replaced with Marco social puzzle
 - [x] Both NPC characters created (Marco in Living Room, Mrs. Whitmore in Study)
 - [x] Dialogue UI with text input, trust bar, "Thinking..." state
-- [x] LlmManager rewritten: curl-based (bypasses Godot HTTPRequest 30s bug), per-NPC prompts, mood parsing, regex guardrails
+- [x] LlmManager: curl-based (bypasses Godot HTTPRequest 30s bug), per-NPC prompts, regex guardrails
+- [x] Keyword-based mood scoring in GDScript (replaces unreliable LLM self-scoring)
+- [x] Seed messages for Marco (fake scared exchange prepended to set tone for small model)
 - [x] Inventory inspector (front/back flip for Photo)
 - [x] Fireplace compartment gated behind `marco_collaborated` flag
 - [x] Mrs. Whitmore working well — responds in character, mentions birthday naturally
 - [x] Ollama context flush on game start
+- [x] Marco collaboration cutscene tested and working (trust threshold: 50)
 
-### Known Issues (In Progress)
-1. **Marco mood scoring inconsistent** — `qwen2.5:1.5b` sometimes forgets `[MOOD:X]` tag or gives wrong values (e.g., -20 for friendly messages). Prompt has been iterated multiple times; current version uses explicit examples. Defaults to 0 when tag missing.
-2. **Marco character consistency** — model occasionally breaks character (talks about itself in third person, or acts not scared). Smaller models struggle with sustained role-play. Current prompt uses "role-playing" framing which helps but isn't perfect.
-3. **UTF-8 mojibake** — curl on Windows sometimes returns garbled smart quotes (â€™ instead of '). Partial fix with character replacements; may need further encoding work.
-4. **Trust bar threshold** — set to 50 for easier testing. May need tuning once mood scoring is more reliable.
-5. **Marco cutscene untested** — the collaboration sequence (walk to fireplace, move brick) hasn't been triggered yet in gameplay.
-6. **Response truncation** — long NPC responses get cut off by Popochiu's `say()` display. May need to split long responses or enforce shorter output.
+### Remaining Issues (Non-Blocking — LLM Tuning)
+1. **Marco character consistency** — `qwen2.5:1.5b` sometimes sounds too cheerful/generic despite prompt and seed messages. Small models struggle with sustained role-play. Prompt iteration ongoing — only affects `llm_manager.gd`.
+2. **UTF-8 mojibake** — curl on Windows sometimes returns garbled smart quotes (â€™ instead of '). Partial fix with character replacements; may need further encoding work.
+3. **Response truncation** — long NPC responses get cut off by Popochiu's `say()` display. May need to split long responses or enforce shorter output.
 
 ### Model Notes
 - `phi3:mini` (2.2GB): Best role-play quality but 30+ seconds per response via curl
-- `qwen2.5:1.5b` (986MB): Good balance — 2-8 seconds, decent role-play, some tag issues
+- `qwen2.5:1.5b` (986MB): Good balance — 2-8 seconds, decent role-play, struggles with sustained character
 - `qwen2.5:0.5b` (400MB): Fast but poor role-play, outputs mostly tags
-- Current: `qwen2.5:1.5b`
+- **Current: `qwen2.5:1.5b`** — mood scoring offloaded to GDScript, seed messages used to guide tone
 
 ## References
 

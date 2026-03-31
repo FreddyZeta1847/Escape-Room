@@ -2,9 +2,9 @@
 
 ## Context
 
-Build a 2D top-down point-and-click escape room game in Godot 4.6 using the **Popochiu 2.1.0** framework. The player is trapped in a **detective/mystery old mansion** and must solve puzzles (inventory items, combination locks, NPC dialogue) to find a key and escape. Two NPCs are powered by a **local LLM (Phi-3-mini via Ollama)** for natural language dialogue:
+Build a 2D top-down point-and-click escape room game in Godot 4.6 using the **Popochiu 2.1.0** framework. The player is trapped in a **detective/mystery old mansion** and must solve puzzles (inventory items, combination locks, NPC dialogue) to find a key and escape. Two NPCs are powered by a **local LLM (qwen2.5:1.5b via Ollama)** for natural language dialogue:
 - **Housekeeper (Mrs. Whitmore)**: Elderly, nostalgic, holds the 4th digit (owner's birthday)
-- **Friend (Marco)**: Philosophy student, speaks in poetic/cryptic riddles. Player must ask deep questions to decode his hints. His key role: directs the player to a **hidden compartment** they'd never find on their own.
+- **Friend (Marco)**: Scared philosophy student, trapped with the player. Social puzzle — player must convince him through dialogue to move a loose brick in the fireplace (trust bar 0→100, keyword-based mood scoring).
 
 Conversation history **persists per NPC for the entire session** (resets on game restart). The project is shared via GitHub — colleagues clone and run a setup script.
 
@@ -160,7 +160,7 @@ Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 
 **Mrs. Whitmore** (Study) — Nostalgic housekeeper. Naturally mentions owner's birthday "the 8th of March" when asked. No special mechanic needed.
 
-**Marco** (Living Room) — Scared but loyal friend. Social puzzle: player must convince him to move the brick through dialogue. Trust bar (0→100) driven by LLM self-scoring `[MOOD:X]` tags. When trust hits 100 → cutscene → Gloves.
+**Marco** (Living Room) — Scared but loyal friend. Social puzzle: player must convince him to move the brick through dialogue. Trust bar (0→100) driven by keyword-based mood scoring in GDScript (positive/negative word detection on player input). When trust hits 50 → cutscene → Gloves. Seed messages prepended to LLM context to establish scared tone for the small model.
 
 ### Game State Integration
 - Game state tracked: `items_collected`, `rooms_visited`, `puzzles_solved`, `marco_mood`, `marco_collaborated`
@@ -266,7 +266,7 @@ Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 
 ---
 
-## Phase 4: NPC System & Dialogue
+## Phase 4: NPC System & Dialogue ✅
 
 **Goal**: Both NPCs placed in rooms, LLM dialogue working, Marco social puzzle functional. Full details in `plans/phase4.md`.
 
@@ -286,27 +286,28 @@ Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 ### 4.3 LLM Wiring
 - [x] Per-NPC system prompts (Marco: social puzzle, Mrs. Whitmore: birthday clue)
 - [x] Curl-based HTTP (bypasses Godot HTTPRequest 30s delay on Windows)
-- [x] `[MOOD:X]` tag parsing → trust bar update
+- [x] Keyword-based mood scoring in GDScript (replaces unreliable LLM `[MOOD:X]` self-scoring)
 - [x] Regex output filter + bracket tag stripping
 - [x] 15-message sliding window history per NPC
 - [x] Ollama context flush on game start
+- [x] Seed messages for Marco (sets scared tone for small LLM)
 
 ### 4.4 Marco Collaboration Cutscene
-- [ ] Trust hits 50 → Marco walks to fireplace → moves brick → Gloves available
-- **Status**: Untested — mood scoring needs to reliably reach threshold first
+- [x] Trust hits 50 → Marco walks to fireplace → moves brick → Gloves available
+- [x] Cutscene tested and working
 
-### 4.5 Known Issues (In Progress)
-- [ ] Marco mood scoring inconsistent — model sometimes forgets `[MOOD:X]` tag or gives wrong values
-- [ ] Marco character consistency — occasionally breaks role (third person, not scared)
+### 4.5 Remaining Issues (LLM tuning — non-blocking)
+- [ ] Marco character consistency — `qwen2.5:1.5b` sometimes sounds too cheerful/generic despite prompt. Prompt iteration ongoing.
 - [ ] UTF-8 mojibake from curl on Windows (smart quotes garbled)
 - [ ] Long responses truncated by Popochiu `say()` display
-- [ ] Cutscene not yet triggered/tested in gameplay
 
 ### 4.6 Testing Completed
 - [x] Mrs. Whitmore responds in character, mentions birthday naturally
 - [x] Dialogue UI blocks game interaction while open
 - [x] Offline fallback works (graceful error when Ollama not running)
 - [x] Response times acceptable (2-8 seconds with `qwen2.5:1.5b` via curl)
+- [x] Marco cutscene triggers and completes correctly
+- [x] Keyword mood scoring is deterministic and consistent
 
 ---
 
@@ -350,10 +351,12 @@ Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 
 ### Ollama Integration
 - **Endpoint**: `POST http://localhost:11434/api/chat`
-- **Model**: `phi3:mini`
+- **Model**: `qwen2.5:1.5b` (986MB — best balance of speed and quality)
 - **Stream**: `false` (wait for complete response)
-- **Options**: `{ "temperature": 0.3, "num_predict": 150 }`
-- **Godot**: `HTTPRequest` node with `use_threads = true`
+- **Options**: `{ "temperature": 0.3, "num_predict": 50 }`
+- **Godot**: Background thread + `curl` via `OS.execute()` (Godot's `HTTPRequest` has a 30s delay bug on Windows)
+- **Mood scoring**: Keyword-based sentiment analysis in GDScript (not LLM — too unreliable with small models)
+- **Context flush**: Model unloaded on game start via `keep_alive: 0` to clear Ollama's cached context
 
 ### Popochiu Key APIs Used
 - `C.Player.walk_to_clicked()` — movement
@@ -366,7 +369,7 @@ Full NPC system prompts and mechanics are documented in `plans/phase4.md`.
 1. Clone repo
 2. Run `setup.sh` (or `setup.bat` on Windows)
 3. Open project in Godot 4.6
-4. Install Ollama + `ollama pull phi3:mini`
+4. Install Ollama + `ollama pull qwen2.5:1.5b`
 5. Start Ollama (`ollama serve`)
 6. Run the game from Godot
 

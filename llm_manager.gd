@@ -22,10 +22,27 @@ const FORBIDDEN_PATTERNS := [
 var conversations: Dictionary = {}
 
 var _pending_npc_id: String = ""
+var _pending_mood: int = 0
 var _request_start_time := 0
 var _thread: Thread
 var _thread_result: String = ""
 var _thread_done := false
+
+## Keyword-based sentiment scoring for the player's input.
+## Runs instantly in GDScript — no LLM overhead.
+const POSITIVE_KEYWORDS := [
+	"friend", "together", "believe", "trust", "brave", "courage",
+	"help", "please", "sorry", "thank", "care", "love", "safe",
+	"okay", "alright", "proud", "strong", "team", "buddy", "pal",
+	"support", "understand", "calm", "relax", "with you", "got this",
+	"count on", "we can", "i'm here", "don't worry", "it's okay",
+]
+const NEGATIVE_KEYWORDS := [
+	"coward", "stupid", "idiot", "shut up", "useless", "pathetic",
+	"move it", "just do it", "wimp", "baby", "scared", "afraid",
+	"hurry", "annoying", "hate", "dumb", "fool", "loser", "weak",
+	"do it now", "stop being", "grow up", "man up", "come on",
+]
 
 
 func _ready() -> void:
@@ -65,10 +82,29 @@ func _process(_delta: float) -> void:
 		_handle_thread_result(npc_id, _thread_result)
 
 
+func score_player_input(text: String) -> int:
+	var lower := text.to_lower()
+	var score := 0
+	for kw in POSITIVE_KEYWORDS:
+		if lower.find(kw) != -1:
+			score += 10
+	for kw in NEGATIVE_KEYWORDS:
+		if lower.find(kw) != -1:
+			score -= 10
+	return clampi(score, -20, 20)
+
+
 func chat(npc_id: String, user_message: String) -> void:
 	if _pending_npc_id != "":
 		push_warning("LlmManager: request already in progress for '%s', ignoring." % _pending_npc_id)
 		return
+
+	# Score player input BEFORE the LLM call (instant, deterministic)
+	if npc_id == "Marco":
+		_pending_mood = score_player_input(user_message)
+		print("[LlmManager] Player input scored: %d for '%s'" % [_pending_mood, user_message.left(60)])
+	else:
+		_pending_mood = 0
 
 	if npc_id not in conversations:
 		conversations[npc_id] = []
@@ -79,6 +115,9 @@ func chat(npc_id: String, user_message: String) -> void:
 
 	var messages: Array = []
 	messages.append({"role": "system", "content": _build_system_prompt(npc_id)})
+	# Seed Marco's conversation with a scared exchange so the model follows the tone
+	if npc_id == "Marco":
+		messages.append_array(_get_marco_seed_messages())
 	messages.append_array(history)
 
 	var body := {
@@ -97,6 +136,11 @@ func chat(npc_id: String, user_message: String) -> void:
 	_pending_npc_id = npc_id
 	_request_start_time = Time.get_ticks_msec()
 	print("[LlmManager] Sending request via curl for '%s' (body size: %d bytes)" % [npc_id, json_body.length()])
+	# Debug: dump full message context sent to Ollama
+	print("[LlmManager] === CONTEXT for '%s' ===" % npc_id)
+	for msg in messages:
+		print("  [%s] %s" % [msg["role"], str(msg["content"]).left(200)])
+	print("[LlmManager] === END CONTEXT ===")
 
 	# Write body to temp file and run curl in a thread
 	_thread_result = ""
@@ -161,14 +205,16 @@ func _handle_thread_result(npc_id: String, result_text: String) -> void:
 	# Apply regex guardrail filter
 	response_text = _filter_response(response_text)
 
-	# Parse mood and strip tags
+	# Strip any leftover bracket tags the LLM might still produce
 	var parsed: Dictionary = parse_mood_tag(response_text)
 	var clean_text: String = parsed["text"]
-	var mood: int = parsed["mood"]
 	if clean_text.is_empty():
 		clean_text = "..."
 
-	print("[LlmManager] Parsed mood: %d, clean text: %s" % [mood, clean_text.left(80)])
+	# Use keyword-scored mood (computed before the LLM call), not LLM output
+	var mood: int = _pending_mood
+
+	print("[LlmManager] Scored mood: %d, clean text: %s" % [mood, clean_text.left(80)])
 
 	if npc_id in conversations:
 		conversations[npc_id].append({"role": "assistant", "content": clean_text})
@@ -226,43 +272,24 @@ func _build_system_prompt(npc_id: String) -> String:
 
 
 func _build_marco_prompt() -> String:
-	var prompt := """You are Marco. Always reply as Marco.
-
-MARCO'S MOST IMPORTANT TRAIT:
-Marco is TERRIFIED of a loose brick in the fireplace.
-He saw it. He knows something is hidden behind it.
-He will NOT touch it. He is too scared.
-This fear controls everything Marco says and does.
-
-Other facts about Marco:
-- 22 years old, studies philosophy
-- Trapped in a mansion with his friend (the player)
-- Speaks as "I", "me", "my". Never says his own name.
-- Replies in 1-2 short sentences only.
-
-Marco behavior:
-- Player is kind → Marco warms up but STILL hesitates about the brick
-- Player is rude → Marco refuses and goes quiet
-- Player is casual → Marco is nervous but friendly
-
-At the end of EVERY reply, add [MOOD:X].
-X is decided by what THE PLAYER said:
-
-Player said something kind or about friendship → X = 10, 15, or 20
-Player said something neutral → X = 0
-Player said something rude or demanding → X = -10 or -20
-
-MOOD examples:
-"you can do it" → [MOOD:15]
-"how are you?" → [MOOD:0]
-"just move the brick!" → [MOOD:-10]
-
-IMPORTANT: Always end with [MOOD:X]. Never skip it."""
+	var prompt := """You are Marco, a scared 22-year-old trapped in a creepy mansion with your best friend (the player).
+You are TERRIFIED. You saw a loose brick in the fireplace and something is hidden behind it. You REFUSE to touch it.
+ALWAYS sound nervous and scared. Stutter, trail off, mention being creeped out.
+The player is your close friend. Be friendly but ALWAYS scared.
+Reply in 1-2 short sentences. Never break character."""
 
 	if GameState.marco_collaborated:
-		prompt += "\n\nNOTE: You have already helped move the brick. You feel proud and relieved. Talk about other things in the room or your shared escape."
+		prompt += "\nYou already helped move the brick. You feel proud and relieved now."
 
 	return prompt
+
+
+## Seed conversation so the small LLM sees Marco's scared tone from the start.
+func _get_marco_seed_messages() -> Array:
+	return [
+		{"role": "user", "content": "Marco, are you okay?"},
+		{"role": "assistant", "content": "I... I don't know. This place gives me the creeps. Did you see that brick in the fireplace? I swear something moved behind it..."},
+	]
 
 
 func _build_whitmore_prompt() -> String:
