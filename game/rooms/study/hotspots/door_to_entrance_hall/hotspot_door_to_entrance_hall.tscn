@@ -1,20 +1,17 @@
 [gd_scene format=3 uid="uid://bpwfjq48mn2pl"]
 
-[ext_resource type="Script" path="res://game/rooms/study/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.gd" id="1_7lsqi"]
-[ext_resource type="Texture2D" path="res://game/rooms/study/hotspots/door_to_entrance_hall/placeholder.png" id="tex_placeholder"]
+[ext_resource type="Script" uid="uid://b2101ktji3b4y" path="res://game/rooms/study/hotspots/door_to_entrance_hall/hotspot_door_to_entrance_hall.gd" id="1_7lsqi"]
 
 [node name="DoorToEntranceHall" type="Area2D" unique_id=2031041795]
 script = ExtResource("1_7lsqi")
 script_name = "DoorToEntranceHall"
 description = "Door To Entrance Hall"
 cursor = 1
-interaction_polygon = PackedVector2Array()
+interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=244519052]
-visible = false
 modulate = Color(1, 0, 1, 1)
 polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 1
-texture = ExtResource("tex_placeholder")
 
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1181423159]
+texture_filter = 1

@@ -43,17 +43,24 @@ look_at_point = Vector2(-38.554314, -17.174187)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="WallClock" parent="Props" unique_id=311835741 instance=ExtResource("4_1dglv")]
-position = Vector2(312, 80)
+position = Vector2(244, 21)
 texture = ExtResource("7_d650x")
+walk_to_point = Vector2(0.77108765, 31.228996)
+look_at_point = Vector2(1.5421753, -4.2409725)
 
 [node name="CoatRack" parent="Props" unique_id=371332406 instance=ExtResource("5_a266l")]
-position = Vector2(224, 72)
+position = Vector2(199, 41)
 texture = ExtResource("9_eut6q")
+baseline = -8
+walk_to_point = Vector2(-0.77108765, 23.518135)
+look_at_point = Vector2(-0.38554382, -6.9397774)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Mirror" parent="Props" unique_id=580580309 instance=ExtResource("6_eiatg")]
-position = Vector2(312, 120)
+position = Vector2(95, 24)
 texture = ExtResource("11_y2adg")
+walk_to_point = Vector2(0, 26.216938)
+look_at_point = Vector2(0, -2.698801)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Hotspots" type="Node2D" parent="." unique_id=1648680286]
@@ -63,11 +70,11 @@ position = Vector2(160, 64)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="DoorToLivingRoom" parent="Hotspots" unique_id=597845831 instance=ExtResource("8_acg24")]
-position = Vector2(8, 120)
+position = Vector2(288, 26)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="DoorToStudy" parent="Hotspots" unique_id=866456258 instance=ExtResource("9_fg0iu")]
-position = Vector2(8, 64)
+position = Vector2(31, 23)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Regions" type="Node2D" parent="." unique_id=15147276]
@@ -78,7 +85,7 @@ interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 position = Vector2(161.5394, 139.26317)
 
 [node name="FromLivingRoom" parent="Markers" unique_id=533339348 instance=ExtResource("11_fgbyi")]
-position = Vector2(29.019768, 120.75903)
+position = Vector2(286.5626, 66.01189)
 
 [node name="FromStudy" parent="Markers" unique_id=1057520888 instance=ExtResource("12_o1f0i")]
 position = Vector2(28.764538, 64.877625)

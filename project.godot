@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Escape Room AI"
-run/main_scene="uid://dpyqq2xfiaf7j"
+run/main_scene="uid://iqpwc0p4scj3"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
