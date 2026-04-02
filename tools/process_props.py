@@ -42,6 +42,10 @@ PROPS = {
     "safe":                 (34, 34, "game/rooms/study/props/safe/placeholder.png"),
     "barred_window":        (44, 44, "game/rooms/study/props/barred_window/placeholder.png"),
     "framed_certificate":   (28, 22, "game/rooms/study/props/framed_certificate/placeholder.png"),
+    # Character sprites
+    "player":               (32, 48, "game/characters/player/player.png"),
+    "marco":                (32, 48, "game/characters/marco/marco.png"),
+    "mrs_whitmore":         (32, 48, "game/characters/mrs_whitmore/mrs_whitmore.png"),
 }
 
 
@@ -147,8 +151,10 @@ def process_prop(name, input_path):
         img = img.crop(bbox)
         print(f"       Cropped to content: {img.size[0]}x{img.size[1]}")
 
-    # Resize to target with nearest-neighbor (crispy pixels)
-    img = img.resize((target_w, target_h), Image.NEAREST)
+    # Resize: LANCZOS for characters (smooth downscale), NEAREST for props (crispy pixels)
+    is_character = name in ("player", "marco", "mrs_whitmore")
+    resample = Image.LANCZOS if is_character else Image.NEAREST
+    img = img.resize((target_w, target_h), resample)
 
     # Save
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
