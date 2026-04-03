@@ -83,4 +83,6 @@ position = Vector2(236.79002, 130.78474)
 
 [node name="CharacterMrsWhitmore *" parent="Characters" unique_id=580166156 instance=ExtResource("13_whitmore")]
 position = Vector2(200, 70)
+walk_to_point = Vector2(22.883484, 3.1863098)
+look_at_point = Vector2(1.1586609, -4.344963)
 metadata/EDITOR_TMP_COPY_OF = "MrsWhitmore"

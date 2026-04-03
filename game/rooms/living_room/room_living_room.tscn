@@ -96,4 +96,7 @@ position = Vector2(287.823, 71.80623)
 
 [node name="CharacterMarco *" parent="Characters" unique_id=326383203 instance=ExtResource("13_marco")]
 position = Vector2(120, 55)
+baseline = -13
+walk_to_point = Vector2(24.173553, 6.3614807)
+look_at_point = Vector2(-0.42409515, -8.906036)
 metadata/EDITOR_TMP_COPY_OF = "Marco"
