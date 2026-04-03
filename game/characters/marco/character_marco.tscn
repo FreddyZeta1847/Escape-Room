@@ -107,7 +107,7 @@ script_name = "Marco"
 description = "Marco"
 clickable = true
 cursor = 8
-flips_when = 1
+flips_when = 2
 interaction_polygon = PackedVector2Array(-16, -24, 16, -24, 16, 24, -16, 24)
 
 [node name="ScalingPolygon" type="CollisionPolygon2D" parent="."]

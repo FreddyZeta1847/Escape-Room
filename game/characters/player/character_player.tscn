@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c3b7ahaabmme1"]
 
 [ext_resource type="Script" uid="uid://cu7f28blblli2" path="res://game/characters/player/character_player.gd" id="1_jil5h"]
-[ext_resource type="Texture2D" uid="uid://rke3daa4wnex" path="res://game/characters/player/player_front.png" id="2_front"]
+[ext_resource type="Texture2D" path="res://game/characters/player/player_front.png" id="2_front"]
 [ext_resource type="Texture2D" path="res://game/characters/player/player_behind.png" id="3_behind"]
 [ext_resource type="Texture2D" path="res://game/characters/player/player_side.png" id="4_side"]
 
@@ -188,7 +188,7 @@ dialog_pos = Vector2(3.6985474, 5.8899536)
 script_name = "Player"
 description = "Player"
 cursor = 8
-flips_when = 1
+flips_when = 2
 interaction_polygon = PackedVector2Array(-16, -24, 16, -24, 16, 24, -16, 24)
 
 [node name="ScalingPolygon" type="CollisionPolygon2D" parent="." unique_id=859752325]

@@ -156,7 +156,28 @@ def process_prop(name, input_path):
     # Resize: LANCZOS for characters (smooth downscale), NEAREST for props (crispy pixels)
     is_character = name.startswith(("player", "marco", "mrs_whitmore"))
     resample = Image.LANCZOS if is_character else Image.NEAREST
-    img = img.resize((target_w, target_h), resample)
+
+    if is_character:
+        # Scale by height so all poses have consistent character size,
+        # then center horizontally on target canvas, anchor to bottom
+        src_w, src_h = img.size
+        scale = target_h / src_h
+        new_w = max(1, int(src_w * scale))
+        new_h = target_h
+        img = img.resize((new_w, new_h), resample)
+        canvas = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+        paste_x = (target_w - new_w) // 2
+        paste_y = 0  # already full height
+        # Crop if wider than canvas
+        if new_w > target_w:
+            left = (new_w - target_w) // 2
+            img = img.crop((left, 0, left + target_w, new_h))
+            paste_x = 0
+        canvas.paste(img, (paste_x, paste_y))
+        img = canvas
+        print(f"       Fit to {new_w}x{new_h}, centered on {target_w}x{target_h} canvas")
+    else:
+        img = img.resize((target_w, target_h), resample)
 
     # Save
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
