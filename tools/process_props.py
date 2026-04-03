@@ -42,10 +42,12 @@ PROPS = {
     "safe":                 (34, 34, "game/rooms/study/props/safe/placeholder.png"),
     "barred_window":        (44, 44, "game/rooms/study/props/barred_window/placeholder.png"),
     "framed_certificate":   (28, 22, "game/rooms/study/props/framed_certificate/placeholder.png"),
-    # Character sprites
-    "player":               (32, 48, "game/characters/player/player.png"),
-    "marco":                (32, 48, "game/characters/marco/marco.png"),
-    "mrs_whitmore":         (32, 48, "game/characters/mrs_whitmore/mrs_whitmore.png"),
+    # Character sprites (each pose is a separate AI-generated image)
+    "player_front":         (32, 48, "game/characters/player/player_front.png"),
+    "player_behind":        (32, 48, "game/characters/player/player_behind.png"),
+    "player_side":          (32, 48, "game/characters/player/player_side.png"),
+    "marco_front":          (32, 48, "game/characters/marco/marco_side.png"),  # right-facing, used as side
+    "mrs_whitmore":         (32, 48, "game/characters/mrs_whitmore/mrs_whitmore_front.png"),
 }
 
 
@@ -152,7 +154,7 @@ def process_prop(name, input_path):
         print(f"       Cropped to content: {img.size[0]}x{img.size[1]}")
 
     # Resize: LANCZOS for characters (smooth downscale), NEAREST for props (crispy pixels)
-    is_character = name in ("player", "marco", "mrs_whitmore")
+    is_character = name.startswith(("player", "marco", "mrs_whitmore"))
     resample = Image.LANCZOS if is_character else Image.NEAREST
     img = img.resize((target_w, target_h), resample)
 

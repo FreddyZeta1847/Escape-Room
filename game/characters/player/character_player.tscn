@@ -1,7 +1,185 @@
 [gd_scene format=3 uid="uid://c3b7ahaabmme1"]
 
 [ext_resource type="Script" uid="uid://cu7f28blblli2" path="res://game/characters/player/character_player.gd" id="1_jil5h"]
-[ext_resource type="Texture2D" uid="uid://rke3daa4wnex" path="res://game/characters/player/player.png" id="2_xayg2"]
+[ext_resource type="Texture2D" uid="uid://rke3daa4wnex" path="res://game/characters/player/player_front.png" id="2_front"]
+[ext_resource type="Texture2D" path="res://game/characters/player/player_behind.png" id="3_behind"]
+[ext_resource type="Texture2D" path="res://game/characters/player/player_side.png" id="4_side"]
+
+[sub_resource type="Animation" id="Animation_idle_d"]
+resource_name = "idle_d"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_front")]
+}
+
+[sub_resource type="Animation" id="Animation_idle_u"]
+resource_name = "idle_u"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_behind")]
+}
+
+[sub_resource type="Animation" id="Animation_idle_r"]
+resource_name = "idle_r"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_side")]
+}
+
+[sub_resource type="Animation" id="Animation_walk_d"]
+resource_name = "walk_d"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_front")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_walk_u"]
+resource_name = "walk_u"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_behind")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_walk_r"]
+resource_name = "walk_r"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_side")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_front")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_player"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"idle_d": SubResource("Animation_idle_d"),
+&"idle_r": SubResource("Animation_idle_r"),
+&"idle_u": SubResource("Animation_idle_u"),
+&"walk_d": SubResource("Animation_walk_d"),
+&"walk_r": SubResource("Animation_walk_r"),
+&"walk_u": SubResource("Animation_walk_u")
+}
 
 [node name="CharacterPlayer" type="Area2D" unique_id=1242308711]
 position = Vector2(155, 84)
@@ -10,21 +188,22 @@ dialog_pos = Vector2(3.6985474, 5.8899536)
 script_name = "Player"
 description = "Player"
 cursor = 8
-interaction_polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+flips_when = 1
+interaction_polygon = PackedVector2Array(-16, -24, 16, -24, 16, 24, -16, 24)
 
 [node name="ScalingPolygon" type="CollisionPolygon2D" parent="." unique_id=859752325]
 polygon = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1671882972]
+libraries/ = SubResource("AnimationLibrary_player")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=380097059]
 texture_filter = 1
-position = Vector2(4, 3)
-texture = ExtResource("2_xayg2")
+texture = ExtResource("2_front")
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=2024437891]
 visible = false
-polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+polygon = PackedVector2Array(-16, -24, 16, -24, 16, 24, -16, 24)
 
 [node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=1090708686]
 visible = false
