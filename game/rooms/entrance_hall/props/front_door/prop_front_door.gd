@@ -14,6 +14,7 @@ func _on_click() -> void:
 	if opened:
 		await C.player.say("The key fits! I'm free!")
 		await C.player.say("I escaped the mansion!")
+		get_tree().change_scene_to_file("res://game/ui/win_screen/win_screen.tscn")
 	else:
 		await C.player.say("The front door is locked. I need a key.")
 
