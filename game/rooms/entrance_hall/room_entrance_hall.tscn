@@ -16,6 +16,8 @@
 [ext_resource type="PackedScene" uid="uid://bljxww8o2ltwf" path="res://game/rooms/entrance_hall/markers/from_living_room/marker_from_living_room.tscn" id="11_fgbyi"]
 [ext_resource type="Texture2D" uid="uid://u7vv5oykwx4q" path="res://game/rooms/entrance_hall/props/mirror/placeholder.png" id="11_y2adg"]
 [ext_resource type="PackedScene" uid="uid://dnfwmxfkpnk7a" path="res://game/rooms/entrance_hall/markers/from_study/marker_from_study.tscn" id="12_o1f0i"]
+[ext_resource type="PackedScene" uid="uid://bcdhwmhfh32wa" path="res://game/rooms/entrance_hall/props/umbrella_stand/prop_umbrella_stand.tscn" id="20_umbst"]
+[ext_resource type="PackedScene" uid="uid://ic7jst7u1k13" path="res://game/rooms/entrance_hall/props/chandelier/prop_chandelier.tscn" id="21_chand"]
 [ext_resource type="Texture2D" uid="uid://bqycxoqyi512j" path="res://game/rooms/entrance_hall/bg_entrance_hall.png" id="tex_bg"]
 
 [node name="RoomEntranceHall" type="Node2D" unique_id=1999326026]
@@ -62,6 +64,12 @@ texture = ExtResource("11_y2adg")
 walk_to_point = Vector2(0, 26.216938)
 look_at_point = Vector2(0, -2.698801)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="UmbrellaStand" parent="Props" unique_id=795605517 instance=ExtResource("20_umbst")]
+position = Vector2(118, 56)
+
+[node name="Chandelier" parent="Props" unique_id=508193370 instance=ExtResource("21_chand")]
+position = Vector2(160, 14)
 
 [node name="Hotspots" type="Node2D" parent="." unique_id=1648680286]
 

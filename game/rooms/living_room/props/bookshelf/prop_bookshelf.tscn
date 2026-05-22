@@ -8,8 +8,8 @@ script = ExtResource("1_duq7c")
 script_name = "Bookshelf"
 description = "Bookshelf"
 cursor = 1
-interaction_polygon = PackedVector2Array(-15, -25.318789, 16, -25.318789, 16, 24, -16, 23.9698)
-interaction_polygon_position = Vector2(0, 1.1979141)
+interaction_polygon = PackedVector2Array(-15.875968, -29.95973, -8.930232, -33.8255, 16, -25.318789, 16.868216, 28.026846, 8.930232, 30.926174, -16, 23.9698)
+interaction_polygon_position = Vector2(8.881784e-16, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=545460335]
 texture_filter = 1
@@ -18,11 +18,10 @@ texture = ExtResource("tex_placeholder")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1512489579]
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=482756455]
-visible = false
 modulate = Color(1, 1, 0, 1)
-position = Vector2(0, 1.1979141)
-scale = Vector2(1, 1.0347222)
-polygon = PackedVector2Array(-15, -25.318789, 16, -25.318789, 16, 24, -16, 23.9698)
+position = Vector2(8.881784e-16, 1)
+scale = Vector2(1.0078125, 1.0347222)
+polygon = PackedVector2Array(-15.875968, -29.95973, -8.930232, -33.8255, 16, -25.318789, 16.868216, 28.026846, 8.930232, 30.926174, -16, 23.9698)
 
 [node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=441502014]
 visible = false

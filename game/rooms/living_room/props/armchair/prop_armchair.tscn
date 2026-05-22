@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://fl4l40l4hv5q"]
+
+[ext_resource type="Script" uid="uid://d1p01ukucf8on" path="res://game/rooms/living_room/props/armchair/prop_armchair.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bbgc5j52ciubo" path="res://game/rooms/living_room/props/armchair/placeholder.png" id="tex_placeholder"]
+
+[node name="Armchair" type="Area2D" unique_id=1900188207]
+script = ExtResource("1_script")
+script_name = "Armchair"
+description = "Armchair"
+cursor = 1
+interaction_polygon = PackedVector2Array(-20, -26, 20, -26, 20, 26, -20, 26)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=746602612]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=888111275]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=379435888]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-20, -26, 20, -26, 20, 26, -20, 26)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=292779674]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

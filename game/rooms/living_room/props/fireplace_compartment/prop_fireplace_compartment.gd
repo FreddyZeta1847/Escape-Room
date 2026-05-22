@@ -10,12 +10,12 @@ extends PopochiuProp
 func _on_click() -> void:
 	await C.player.walk_to_clicked()
 	await C.player.face_clicked()
-	if GameState.marco_collaborated:
-		await InteractionSystem.register_discovery(["Gloves"], "FireplaceCompartment")
-		await C.player.say("There are gloves hidden behind the brick!")
-		clickable = false
-	else:
-		await C.player.say("This brick feels different... but I can't move it on my own.")
+	# TEMP — Marco-collaboration gate bypassed for inventory testing.
+	# Also drops the photo here so both icons can be checked in one click.
+	# Restore the `if GameState.marco_collaborated:` gate and remove "Photo" once testing is done.
+	await InteractionSystem.register_discovery(["Gloves", "Photo"], "FireplaceCompartment")
+	await C.player.say("There are gloves hidden behind the brick — and a photograph!")
+	clickable = false
 
 
 # Called when the prop is double-clicked

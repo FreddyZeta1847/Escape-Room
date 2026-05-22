@@ -10,7 +10,7 @@ script_name = "Desk"
 description = "Desk"
 clickable = true
 cursor = 1
-interaction_polygon = PackedVector2Array()
+interaction_polygon = PackedVector2Array(-40, -30, 40, -30, 40, 30, -40, 30)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1579150264]
 texture_filter = 1
@@ -21,7 +21,7 @@ texture = ExtResource("tex_placeholder")
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=633444328]
 visible = false
 modulate = Color(1, 1, 0, 1)
-polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+polygon = PackedVector2Array(-40, -30, 40, -30, 40, 30, -40, 30)
 
 [node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=374318825]
 visible = false

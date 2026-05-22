@@ -157,10 +157,11 @@ func _on_tween_finished() -> void:
 
 func _add_item(item: PopochiuInventoryItem, animate := true) -> void:
 	box.add_child(item)
-	
+
 	item.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	item.size_flags_vertical = Control.SIZE_FILL
-	item.expand_mode = TextureRect.EXPAND_FIT_WIDTH
+	item.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	item.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	item.custom_minimum_size = Vector2(32, 32)
 	
 	item.selected.connect(_change_cursor)
 	

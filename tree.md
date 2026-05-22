@@ -1103,6 +1103,10 @@
 |   |   |   |   +-- start
 |   |   |   |       +-- marker_start.tscn
 |   |   |   |-- props
+|   |   |   |   |-- chandelier
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_chandelier.gd
+|   |   |   |   |   +-- prop_chandelier.tscn
 |   |   |   |   |-- coat_rack
 |   |   |   |   |   |-- placeholder.png
 |   |   |   |   |   |-- placeholder.png.import
@@ -1121,6 +1125,14 @@
 |   |   |   |   |   |-- prop_mirror.gd
 |   |   |   |   |   |-- prop_mirror.gd.uid
 |   |   |   |   |   +-- prop_mirror.tscn
+|   |   |   |   |-- persian_rug
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_persian_rug.gd
+|   |   |   |   |   +-- prop_persian_rug.tscn
+|   |   |   |   |-- umbrella_stand
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_umbrella_stand.gd
+|   |   |   |   |   +-- prop_umbrella_stand.tscn
 |   |   |   |   +-- wall_clock
 |   |   |   |       |-- placeholder.png
 |   |   |   |       |-- placeholder.png.import
@@ -1158,6 +1170,10 @@
 |   |   |   |   +-- from_entrance_hall
 |   |   |   |       +-- marker_from_entrance_hall.tscn
 |   |   |   |-- props
+|   |   |   |   |-- armchair
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_armchair.gd
+|   |   |   |   |   +-- prop_armchair.tscn
 |   |   |   |   |-- birthday_cake
 |   |   |   |   |   |-- placeholder.png
 |   |   |   |   |   |-- placeholder.png.import
@@ -1194,12 +1210,20 @@
 |   |   |   |   |   |-- prop_painting.gd
 |   |   |   |   |   |-- prop_painting.gd.uid
 |   |   |   |   |   +-- prop_painting.tscn
-|   |   |   |   +-- small_drawer
+|   |   |   |   |-- record_player
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_record_player.gd
+|   |   |   |   |   +-- prop_record_player.tscn
+|   |   |   |   |-- small_drawer
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- placeholder.png.import
+|   |   |   |   |   |-- prop_small_drawer.gd
+|   |   |   |   |   |-- prop_small_drawer.gd.uid
+|   |   |   |   |   +-- prop_small_drawer.tscn
+|   |   |   |   +-- wine_decanter
 |   |   |   |       |-- placeholder.png
-|   |   |   |       |-- placeholder.png.import
-|   |   |   |       |-- prop_small_drawer.gd
-|   |   |   |       |-- prop_small_drawer.gd.uid
-|   |   |   |       +-- prop_small_drawer.tscn
+|   |   |   |       |-- prop_wine_decanter.gd
+|   |   |   |       +-- prop_wine_decanter.tscn
 |   |   |   |-- walkable_areas
 |   |   |   |   +-- main
 |   |   |   |       |-- walkable_area_main.gd
@@ -1245,6 +1269,10 @@
 |   |   |   |   |   |-- prop_desk.gd
 |   |   |   |   |   |-- prop_desk.gd.uid
 |   |   |   |   |   +-- prop_desk.tscn
+|   |   |   |   |-- desk_lamp
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_desk_lamp.gd
+|   |   |   |   |   +-- prop_desk_lamp.tscn
 |   |   |   |   |-- filing_cabinet
 |   |   |   |   |   |-- placeholder.png
 |   |   |   |   |   |-- placeholder.png.import
@@ -1257,12 +1285,20 @@
 |   |   |   |   |   |-- prop_framed_certificate.gd
 |   |   |   |   |   |-- prop_framed_certificate.gd.uid
 |   |   |   |   |   +-- prop_framed_certificate.tscn
-|   |   |   |   +-- safe
+|   |   |   |   |-- globe
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- prop_globe.gd
+|   |   |   |   |   +-- prop_globe.tscn
+|   |   |   |   |-- safe
+|   |   |   |   |   |-- placeholder.png
+|   |   |   |   |   |-- placeholder.png.import
+|   |   |   |   |   |-- prop_safe.gd
+|   |   |   |   |   |-- prop_safe.gd.uid
+|   |   |   |   |   +-- prop_safe.tscn
+|   |   |   |   +-- typewriter
 |   |   |   |       |-- placeholder.png
-|   |   |   |       |-- placeholder.png.import
-|   |   |   |       |-- prop_safe.gd
-|   |   |   |       |-- prop_safe.gd.uid
-|   |   |   |       +-- prop_safe.tscn
+|   |   |   |       |-- prop_typewriter.gd
+|   |   |   |       +-- prop_typewriter.tscn
 |   |   |   |-- walkable_areas
 |   |   |   |   +-- main
 |   |   |   |       |-- walkable_area_main.gd
@@ -1284,6 +1320,13 @@
 |   |   |-- transition_layer.gd.uid
 |   |   +-- transition_layer.tscn
 |   |-- ui
+|   |   |-- start_menu
+|   |   |   |-- start_menu.gd
+|   |   |   |-- start_menu.gd.uid
+|   |   |   +-- start_menu.tscn
+|   |   |-- win_screen
+|   |   |   |-- win_screen.gd
+|   |   |   +-- win_screen.tscn
 |   |   |-- combination_lock.gd
 |   |   |-- combination_lock.gd.uid
 |   |   |-- dialogue_ui.gd
@@ -1294,7 +1337,6 @@
 |   |-- popochiu_globals.gd
 |   +-- popochiu_globals.gd.uid
 |-- plans
-|   |-- FILES.md
 |   |-- phase1.md
 |   |-- phase2.md
 |   |-- phase3.md
@@ -1303,7 +1345,8 @@
 |   +-- plan.md
 |-- tools
 |   |-- build_rooms.py
-|   +-- process_props.py
+|   |-- process_props.py
+|   +-- scaffold_props.py
 |-- .editorconfig
 |-- .gitattributes
 |-- .gitignore
@@ -1318,5 +1361,4 @@
 |-- llm_manager.gd.uid
 |-- project.godot
 |-- setup.bat
-|-- setup.sh
-+-- tree.md
++-- setup.sh

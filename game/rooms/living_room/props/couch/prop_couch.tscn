@@ -8,7 +8,8 @@ script = ExtResource("1_p77mf")
 script_name = "Couch"
 description = "Couch"
 cursor = 1
-interaction_polygon = PackedVector2Array(-52, -11, 61, -12, 61, 16, -52, 16)
+interaction_polygon = PackedVector2Array(-32, -11, 29, -11, 31, 14, -31, 15)
+interaction_polygon_position = Vector2(0, -5)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=679465450]
 texture_filter = 1
@@ -17,8 +18,10 @@ texture = ExtResource("tex_placeholder")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=99161696]
 
 [node name="InteractionPolygon" type="CollisionPolygon2D" parent="." unique_id=323466802]
+visible = false
 modulate = Color(1, 1, 0, 1)
-polygon = PackedVector2Array(-52, -11, 61, -12, 61, 16, -52, 16)
+position = Vector2(0, -5)
+polygon = PackedVector2Array(-32, -11, 29, -11, 31, 14, -31, 15)
 
 [node name="ObstaclePolygon" type="NavigationObstacle2D" parent="." unique_id=38527654]
 visible = false

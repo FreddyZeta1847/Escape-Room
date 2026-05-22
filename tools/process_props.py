@@ -37,17 +37,31 @@ PROPS = {
     "painting":             (36, 28, "game/rooms/living_room/props/painting/placeholder.png"),
     "small_drawer":         (48, 34, "game/rooms/living_room/props/small_drawer/placeholder.png"),
     "bookshelf":            (56, 80, "game/rooms/living_room/props/bookshelf/placeholder.png"),
-    "desk":                 (64, 44, "game/rooms/study/props/desk/placeholder.png"),
+    "desk":                 (80, 60, "game/rooms/study/props/desk/placeholder.png"),
     "filing_cabinet":       (36, 64, "game/rooms/study/props/filing_cabinet/placeholder.png"),
     "safe":                 (34, 34, "game/rooms/study/props/safe/placeholder.png"),
     "barred_window":        (44, 44, "game/rooms/study/props/barred_window/placeholder.png"),
     "framed_certificate":   (28, 22, "game/rooms/study/props/framed_certificate/placeholder.png"),
+    # Additional atmosphere props (scaffolded — drop matching PNGs into AI Generate/ to populate)
+    "umbrella_stand":       (18, 44, "game/rooms/entrance_hall/props/umbrella_stand/placeholder.png"),
+    "chandelier":           (48, 24, "game/rooms/entrance_hall/props/chandelier/placeholder.png"),
+    "armchair":             (40, 52, "game/rooms/living_room/props/armchair/placeholder.png"),
+    "record_player":        (52, 56, "game/rooms/living_room/props/record_player/placeholder.png"),
+    "wine_decanter":        (14, 24, "game/rooms/living_room/props/wine_decanter/placeholder.png"),
+    "desk_lamp":            (18, 36, "game/rooms/study/props/desk_lamp/placeholder.png"),
+    "typewriter":           (56, 40, "game/rooms/study/props/typewriter/placeholder.png"),
+    "globe":                (32, 44, "game/rooms/study/props/globe/placeholder.png"),
     # Character sprites (each pose is a separate AI-generated image)
     "player_front":         (32, 48, "game/characters/player/player_front.png"),
     "player_behind":        (32, 48, "game/characters/player/player_behind.png"),
     "player_side":          (32, 48, "game/characters/player/player_side.png"),
     "marco_front":          (32, 48, "game/characters/marco/marco_side.png"),  # right-facing, used as side
     "mrs_whitmore":         (32, 48, "game/characters/mrs_whitmore/mrs_whitmore_front.png"),
+    # Inventory item icons (32x32 — matches PixelLab native output)
+    "front_door_key":       (32, 32, "game/inventory_items/front_door_key/icon_front_door_key.png"),
+    "gloves":               (32, 32, "game/inventory_items/gloves/icon_gloves.png"),
+    "photo":                (32, 32, "game/inventory_items/photo/icon_photo.png"),
+    "photo_back":           (32, 32, "game/inventory_items/photo/icon_photo_back.png"),
 }
 
 
@@ -111,10 +125,17 @@ def remove_checkerboard_bg(img):
     edge_labels = set(np.unique(labeled[edge_mask == 1]))
     edge_labels.discard(0)  # 0 = not bg
 
-    # Build final mask: only bg pixels connected to edges
-    remove_mask = np.isin(labeled, list(edge_labels))
+    # Build edge-connected component mask (typical bg).
+    edge_mask_total = np.isin(labeled, list(edge_labels))
 
-    # Step 3: Apply transparency
+    # Also remove non-edge-connected bg-colored pixels — checkerboard squares
+    # often leak through sprite gaps (e.g., between iron bars of an umbrella
+    # stand or globe meridian cutouts). At pixel-art prop scale, a low-sat
+    # ~white/grey pixel is far more likely to be checker residue than a
+    # legitimate highlight, so removing them is safer than keeping them.
+    remove_mask = edge_mask_total | is_bg_color
+
+    # Apply transparency
     arr[remove_mask, 3] = 0
 
     result = Image.fromarray(arr.astype(np.uint8))
@@ -139,15 +160,29 @@ def process_prop(name, input_path):
 
     print(f"[...] {name}: {img.size[0]}x{img.size[1]} -> {target_w}x{target_h}")
 
-    # Check if already has real transparency
-    alpha_min = img.split()[3].getextrema()[0]
-    if alpha_min == 255:
+    # Decide whether to run checkerboard removal. The old check (`alpha_min == 255`)
+    # skipped removal if a single pixel was transparent — which happens often when
+    # generators bake fake transparency in most of the image but mark a few edge
+    # pixels alpha 0. Use a fraction test instead: if less than 10% of pixels are
+    # transparent, assume the generator baked the background and run removal.
+    alpha_arr = np.array(img.split()[3])
+    transparent_frac = float(np.sum(alpha_arr < 200)) / alpha_arr.size
+    if transparent_frac < 0.10:
         img, pct = remove_checkerboard_bg(img)
         print(f"       Background removed ({pct:.1f}% of pixels)")
     else:
-        print(f"       Already has transparency, skipping bg removal")
+        print(f"       {transparent_frac * 100:.0f}% already transparent, skipping bg removal")
 
-    # Crop to content (trim transparent edges)
+    # If the source is already at target size, respect the author's framing
+    # (PixelLab-native 32x32 icons often use intentional transparent padding
+    # to balance the composition — cropping + resizing would stretch them).
+    if img.size == (target_w, target_h):
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        img.save(output_path)
+        print(f"[OK]  {name}: already at {target_w}x{target_h}, saved as-is to {output_rel}")
+        return True
+
+    # Crop to content (trim transparent edges) — only when we'll be resizing
     bbox = img.getbbox()
     if bbox:
         img = img.crop(bbox)
@@ -177,7 +212,21 @@ def process_prop(name, input_path):
         img = canvas
         print(f"       Fit to {new_w}x{new_h}, centered on {target_w}x{target_h} canvas")
     else:
-        img = img.resize((target_w, target_h), resample)
+        # Aspect-preserving fit for props: scale so the prop fits inside the
+        # target box, then center on a transparent canvas of target size.
+        # Prevents the vertical/horizontal squashing that non-proportional
+        # resize causes when the source aspect doesn't match the target.
+        src_w, src_h = img.size
+        scale = min(target_w / src_w, target_h / src_h)
+        new_w = max(1, int(round(src_w * scale)))
+        new_h = max(1, int(round(src_h * scale)))
+        img = img.resize((new_w, new_h), resample)
+        canvas = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+        paste_x = (target_w - new_w) // 2
+        paste_y = (target_h - new_h) // 2
+        canvas.paste(img, (paste_x, paste_y))
+        img = canvas
+        print(f"       Aspect-fit to {new_w}x{new_h}, centered on {target_w}x{target_h} canvas")
 
     # Save
     os.makedirs(os.path.dirname(output_path), exist_ok=True)

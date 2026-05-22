@@ -49,6 +49,15 @@ W_BLU_FILL = t(rb, 5, 17)
 W_BLU_FRAME_T = t(rb, 0, 17)
 W_BLU_FRAME_B = t(rb, 0, 19)  # beige baseboard for contrast
 
+# Beige wall
+W_BEI_FILL = t(rb, 5, 19)
+W_BEI_FRAME_T = t(rb, 0, 19)
+
+# Yellow/cream wall — bright complement to the turquoise study floor
+W_YEL_FILL = t(rb, 5, 7)
+W_YEL_FRAME_T = t(rb, 0, 7)  # same tile as W_SAL_FRAME_B; alias for clarity
+W_MNT_FRAME_T = t(rb, 0, 9)  # mint framed, used as yellow's baseboard contrast
+
 # ============================================================
 # FLOORS — cols 11-13 have patterned tiles
 # Rows 13-14: herringbone wood (perfect for mansion)
@@ -65,6 +74,13 @@ F_GREY_A = t(rb, 11, 11)     # grey stone A
 F_GREY_B = t(rb, 12, 11)     # grey stone B
 F_GREY_C = t(rb, 11, 12)     # grey stone row 2
 F_GREY_D = t(rb, 12, 12)     # grey stone row 2 B
+
+F_TURQ_A = t(rb, 11, 9)      # turquoise diamond row 1
+F_TURQ_B = t(rb, 12, 9)
+F_TURQ_C = t(rb, 13, 9)
+F_TURQ_D = t(rb, 11, 10)     # turquoise diamond row 2
+F_TURQ_E = t(rb, 12, 10)
+F_TURQ_F = t(rb, 13, 10)
 
 # ============================================================
 # INTERIORS FURNITURE (verified coordinates)
@@ -118,6 +134,16 @@ def fill_grey(canvas, start_y=0, rows=12):
             place(canvas, tile, c*TILE, start_y + r*TILE)
 
 
+def fill_turquoise(canvas, start_y=0, rows=12):
+    """Fill with 2-row repeating turquoise diamond pattern."""
+    tiles_row1 = [F_TURQ_A, F_TURQ_B, F_TURQ_C]
+    tiles_row2 = [F_TURQ_D, F_TURQ_E, F_TURQ_F]
+    for r in range(rows):
+        row_tiles = tiles_row1 if r % 2 == 0 else tiles_row2
+        for c in range(20):
+            place(canvas, row_tiles[c % len(row_tiles)], c*TILE, start_y + r*TILE)
+
+
 def draw_wall_3row(canvas, frame_top, fill, frame_base):
     """Draw 3-row wall: framed top, seamless fill mid, framed baseboard."""
     for c in range(20):
@@ -144,6 +170,15 @@ def clear_doorway_grey(canvas, col_start, col_end):
             else:
                 tile = F_GREY_C if col % 2 == 0 else F_GREY_D
             place(canvas, tile, col*TILE, row*TILE)
+
+
+def clear_doorway_turquoise(canvas, col_start, col_end):
+    tiles_row1 = [F_TURQ_A, F_TURQ_B, F_TURQ_C]
+    tiles_row2 = [F_TURQ_D, F_TURQ_E, F_TURQ_F]
+    for row in range(3):
+        row_tiles = tiles_row1 if row % 2 == 0 else tiles_row2
+        for col in range(col_start, col_end):
+            place(canvas, row_tiles[col % len(row_tiles)], col*TILE, row*TILE)
 
 
 def draw_rug(canvas, px, py, w, h):
@@ -211,11 +246,14 @@ def build_living_room():
 # ============================================================
 def build_study():
     c = Image.new("RGBA", (WIDTH, HEIGHT), (0, 0, 0, 255))
-    fill_grey(c)
-    draw_wall_3row(c, W_BLU_FRAME_T, W_BLU_FILL, W_BLU_FRAME_B)
+    # Cream/yellow walls + turquoise diamond floor — bright warm complement
+    # to the cool floor (classic blue+yellow palette). Mint baseboard
+    # transitions naturally from the turquoise floor into the wall.
+    fill_turquoise(c)
+    draw_wall_3row(c, W_YEL_FRAME_T, W_YEL_FILL, W_MNT_FRAME_T)
 
     # Doorway right
-    clear_doorway_grey(c, 17, 19)
+    clear_doorway_turquoise(c, 17, 19)
 
     # Rug
     draw_rug(c, 6*TILE, 5*TILE, 5, 3)

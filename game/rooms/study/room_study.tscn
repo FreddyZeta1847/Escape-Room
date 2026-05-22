@@ -12,6 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://hafowg4rjtbr" path="res://game/rooms/study/markers/from_entrance_hall/marker_from_entrance_hall.tscn" id="10_h27hv"]
 [ext_resource type="PackedScene" uid="uid://j2hjdlpfn8ie" path="res://game/rooms/study/markers/start/marker_start.tscn" id="12_rgpa3"]
 [ext_resource type="PackedScene" path="res://game/characters/mrs_whitmore/character_mrs_whitmore.tscn" id="13_whitmore"]
+[ext_resource type="PackedScene" uid="uid://cjvs8td4cxp17" path="res://game/rooms/study/props/desk_lamp/prop_desk_lamp.tscn" id="20_dlamp"]
+[ext_resource type="PackedScene" uid="uid://baci30c53tfcy" path="res://game/rooms/study/props/typewriter/prop_typewriter.tscn" id="21_typew"]
+[ext_resource type="PackedScene" uid="uid://bglobeprop001" path="res://game/rooms/study/props/globe/prop_globe.tscn" id="22_globe"]
 [ext_resource type="Texture2D" uid="uid://c3enoblxl7pk0" path="res://game/rooms/study/bg_study.png" id="tex_bg"]
 
 [node name="RoomStudy" type="Node2D" unique_id=1086019223]
@@ -32,13 +35,12 @@ texture = ExtResource("tex_bg")
 [node name="Props" type="Node2D" parent="." unique_id=1854217019]
 
 [node name="Safe" parent="Props" unique_id=1293346080 instance=ExtResource("2_64qat")]
-position = Vector2(88, 72)
+position = Vector2(88, 88)
 walk_to_point = Vector2(11.621223, 20.674973)
 look_at_point = Vector2(3.1080017, -7.83757)
-interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="Desk" parent="Props" unique_id=1528492580 instance=ExtResource("3_qnoa5")]
-position = Vector2(136, 72)
+position = Vector2(136, 80)
 walk_to_point = Vector2(0, 20.566162)
 look_at_point = Vector2(0, -3.7656326)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
@@ -50,7 +52,7 @@ look_at_point = Vector2(3.4698792, -9.253059)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 
 [node name="BarredWindow" parent="Props" unique_id=668304473 instance=ExtResource("5_3lmee")]
-position = Vector2(48, 24)
+position = Vector2(72, 24)
 walk_to_point = Vector2(-1.9277191, 31.228996)
 look_at_point = Vector2(-5.783142, -5.397606)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
@@ -58,6 +60,15 @@ interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
 [node name="FramedCertificate" parent="Props" unique_id=2047585082 instance=ExtResource("6_p686u")]
 position = Vector2(288, 128)
 interaction_polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+
+[node name="DeskLamp" parent="Props" unique_id=2071436540 instance=ExtResource("20_dlamp")]
+position = Vector2(120, 64)
+
+[node name="Typewriter" parent="Props" unique_id=1359803261 instance=ExtResource("21_typew")]
+position = Vector2(144, 72)
+
+[node name="Globe" parent="Props" unique_id=1965677927 instance=ExtResource("22_globe")]
+position = Vector2(192, 112)
 
 [node name="Hotspots" type="Node2D" parent="." unique_id=718804232]
 

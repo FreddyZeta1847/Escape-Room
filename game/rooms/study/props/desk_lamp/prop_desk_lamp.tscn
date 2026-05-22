@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bdesklampprop001"]
+
+[ext_resource type="Script" path="res://game/rooms/study/props/desk_lamp/prop_desk_lamp.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://game/rooms/study/props/desk_lamp/placeholder.png" id="tex_placeholder"]
+
+[node name="DeskLamp" type="Area2D"]
+script = ExtResource("1_script")
+script_name = "DeskLamp"
+description = "Desk Lamp"
+cursor = 1
+interaction_polygon = PackedVector2Array(-9, -18, 9, -18, 9, 18, -9, 18)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="."]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-9, -18, 9, -18, 9, 18, -9, 18)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="."]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true

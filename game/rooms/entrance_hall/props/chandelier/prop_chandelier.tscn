@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bchandelierprop001"]
+
+[ext_resource type="Script" path="res://game/rooms/entrance_hall/props/chandelier/prop_chandelier.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://game/rooms/entrance_hall/props/chandelier/placeholder.png" id="tex_placeholder"]
+
+[node name="Chandelier" type="Area2D"]
+script = ExtResource("1_script")
+script_name = "Chandelier"
+description = "Chandelier"
+cursor = 1
+interaction_polygon = PackedVector2Array(-24, -12, 24, -12, 24, 12, -24, 12)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("tex_placeholder")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="InteractionPolygon" type="CollisionPolygon2D" parent="."]
+visible = false
+modulate = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(-24, -12, 24, -12, 24, 12, -24, 12)
+
+[node name="ObstaclePolygon" type="NavigationObstacle2D" parent="."]
+visible = false
+affect_navigation_mesh = true
+carve_navigation_mesh = true
