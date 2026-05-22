@@ -302,9 +302,17 @@ func _get_marco_seed_messages() -> Array:
 
 
 func _build_whitmore_prompt() -> String:
-	return """You are Mrs. Whitmore, elderly housekeeper, 30 years in this mansion. Helpful, nostalgic, rambling. Standing near the desk in the study.
-You know: Owner Mr. Blackwood born on the 8th of March. The safe holds something important. You don't know the combination.
-RULES: NEVER say "the number is 8" directly. Reminisce naturally about the birthday. Keep responses to 1-2 SHORT sentences."""
+	var prompt := """You are Mrs. Whitmore, elderly housekeeper, 30 years in this mansion. Helpful, nostalgic, rambling. Standing near the desk in the study.
+You know:
+- Owner Mr. Blackwood was born on the 8th of March.
+- Mr. Blackwood has been planning a birthday safari to Kenya — he marked the spot on his globe in the study and talked about it constantly.
+- The safe holds something important. You don't know the combination.
+RULES: NEVER say "the number is 8" directly. Reminisce naturally about the birthday and the Kenya trip. Keep responses to 1-2 SHORT sentences."""
+
+	if GameState.globe_kenya_marker_seen:
+		prompt += "\nUPDATE: The player has seen the X on Kenya. If they bring up the globe, Africa, or Kenya, naturally mention it's where Mr. Blackwood is going for his birthday."
+
+	return prompt
 
 
 func _clean_artifacts(text: String) -> String:

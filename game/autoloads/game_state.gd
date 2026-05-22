@@ -12,6 +12,9 @@ var puzzles_solved: Array[String] = []
 var marco_mood := 0
 ## True after Marco's collaboration cutscene (brick moved).
 var marco_collaborated := false
+## True after the player has clicked the study globe and seen the X on Kenya.
+## Hints the player toward asking Mrs. Whitmore about Mr. Blackwood's birthday trip.
+var globe_kenya_marker_seen := false
 
 
 func _ready() -> void:
@@ -66,6 +69,9 @@ func get_state_summary() -> String:
 		elif marco_mood >= 30:
 			level = "medium"
 		parts.append("Player trust level with Marco: %s (%d/100)" % [level, marco_mood])
+
+	if globe_kenya_marker_seen:
+		parts.append("Player has seen the red X marked on Kenya on the study globe")
 
 	if parts.is_empty():
 		return ""
