@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AudioCueMusic" load_steps=3 format=3 uid="uid://cwintheme0001"]
+
+[ext_resource type="Script" uid="uid://bt4tic1dfvyfo" path="res://addons/popochiu/engine/audio_manager/audio_cue_music.gd" id="1"]
+[ext_resource type="AudioStream" path="res://game/audio/music/win_theme.mp3" id="2"]
+
+[resource]
+script = ExtResource("1")
+resource_name = "win_theme"
+audio = ExtResource("2")
+loop = false
+is_2d = false
+can_play_simultaneous = false
+pitch = 0.0
+volume = -4.0
+rnd_pitch = Vector2(0, 0)
+rnd_volume = Vector2(0, 0)
+max_distance = 2000
+bus = "Music"

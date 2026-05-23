@@ -14,6 +14,8 @@ func _ready() -> void:
 	_connect_buttons()
 	_start_title_flicker()
 	play_again_button.grab_focus()
+	A.stop("game_theme", 0.8)
+	A.play_music_cue("win_theme", 0.5)
 
 
 func _hide_popochiu_cursor() -> void:
@@ -45,6 +47,7 @@ func _fill_stats() -> void:
 
 func _on_play_again_pressed() -> void:
 	_reset_game_state()
+	A.stop("win_theme", 0.5)
 	get_tree().change_scene_to_file(START_MENU_SCENE)
 
 
