@@ -16,7 +16,7 @@ func _ready() -> void:
 	_start_title_flicker()
 	settings_panel.visible = false
 	play_button.grab_focus()
-	A.play_music_cue("menu_theme", 1.0)
+	A.menu_theme.play(1.0)
 
 
 func _hide_popochiu_cursor() -> void:
@@ -50,8 +50,8 @@ func _start_title_flicker() -> void:
 
 func _on_play_pressed() -> void:
 	_show_popochiu_cursor()
-	A.stop("menu_theme", 1.0)
-	A.play_music_cue("game_theme", 1.5)
+	A.menu_theme.stop(1.0)
+	A.game_theme.play(1.5)
 	get_tree().change_scene_to_file(ENTRANCE_HALL_SCENE)
 
 

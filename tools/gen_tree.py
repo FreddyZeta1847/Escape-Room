@@ -2,8 +2,8 @@ import os, sys
 sys.stdout.reconfigure(encoding='utf-8')
 
 IGNORE = {
-    ".git", "node_modules", "__pycache__", ".DS_Store", "dist", "build",
-    ".venv", ".godot", "export", ".import", "imported",
+    ".git", ".claude", "node_modules", "__pycache__", ".DS_Store",
+    "dist", "build", ".venv", ".godot", "export", ".import", "imported",
     "AI Generate", "Modern tiles_Free",
 }
 

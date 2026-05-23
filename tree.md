@@ -878,9 +878,6 @@
 │       ├── popochiu_plugin.gd.uid
 │       ├── popochiu_resources.gd
 │       └── popochiu_resources.gd.uid
-├── docs/
-│   └── superpowers/
-│       └── specs/
 ├── game/
 │   ├── audio/
 │   │   ├── cues/
@@ -889,8 +886,11 @@
 │   │   │   └── win_theme.tres
 │   │   └── music/
 │   │       ├── game_theme.mp3
+│   │       ├── game_theme.mp3.import
 │   │       ├── menu_theme.mp3
-│   │       └── win_theme.mp3
+│   │       ├── menu_theme.mp3.import
+│   │       ├── win_theme.mp3
+│   │       └── win_theme.mp3.import
 │   ├── autoloads/
 │   │   ├── a.gd
 │   │   ├── a.gd.uid
@@ -1361,14 +1361,6 @@
 │   ├── popochiu_data.cfg
 │   ├── popochiu_globals.gd
 │   └── popochiu_globals.gd.uid
-├── plans/
-│   ├── 2026-05-23-music-and-sfx-design.md
-│   ├── phase1.md
-│   ├── phase2.md
-│   ├── phase3.md
-│   ├── phase4.md
-│   ├── phase5.md
-│   └── plan.md
 ├── tools/
 │   ├── build_rooms.py
 │   ├── gen_tree.py
