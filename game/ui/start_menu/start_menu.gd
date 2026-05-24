@@ -50,7 +50,7 @@ func _start_title_flicker() -> void:
 
 func _on_play_pressed() -> void:
 	_show_popochiu_cursor()
-	A.menu_theme.stop(1.0)
+	A.safe_stop(A.menu_theme, 1.0)
 	A.game_theme.play(1.5)
 	get_tree().change_scene_to_file(ENTRANCE_HALL_SCENE)
 

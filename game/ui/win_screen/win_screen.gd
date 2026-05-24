@@ -14,7 +14,7 @@ func _ready() -> void:
 	_connect_buttons()
 	_start_title_flicker()
 	play_again_button.grab_focus()
-	A.game_theme.stop(0.8)
+	A.safe_stop(A.game_theme, 0.8)
 	A.win_theme.play(0.5)
 
 
@@ -47,7 +47,7 @@ func _fill_stats() -> void:
 
 func _on_play_again_pressed() -> void:
 	_reset_game_state()
-	A.win_theme.stop(0.5)
+	A.safe_stop(A.win_theme, 0.5)
 	get_tree().change_scene_to_file(START_MENU_SCENE)
 
 
